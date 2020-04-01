@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:unroutine/model/sequence_model.dart';
+import 'dart:async';
+import 'dart:convert';
+
+const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json?steps=12';
 
 void main() {
   runApp(MyApp());
@@ -45,10 +51,24 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+Future<SequenceModel> fetchSequence() async {
+  final response = await http.get(apiUrl);
+
+  if (response.statusCode == 200) {
+    return SequenceModel.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Failed to load sequence');
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  // TODO: replace with model
-  final List<String> steps = ['Step to LBI', 'Side Toe Hop to RFO', 'Bunny Hop to RFO', 'Power Pull to RFI', 'Step to LFO'];
-  final String start = 'RBO';
+  Future<SequenceModel> sequence;
+
+  @override
+  void initState() {
+    super.initState();
+    sequence = fetchSequence();
+  }
 
   void _onRefresh() {
     print('refreshing');
@@ -56,8 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: change to using model builder
-    List<Text> children = [Text(start)] + steps.map((String step) => Text(step)).toList();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -73,23 +91,20 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: children
+        child: FutureBuilder<SequenceModel>(
+          future: sequence,
+          builder: (context, sequence) {
+            if (sequence.hasData) {
+              List<Text> children = [Text(sequence.data.startEdge.name)] + sequence.data.transitions.map((Transition transition) => Text(transition.move.name)).toList();
+              return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children
+              );
+            } else if (sequence.hasError) {
+              return Text("${sequence.error}");
+            }
+            return CircularProgressIndicator();
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
