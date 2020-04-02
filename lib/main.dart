@@ -55,7 +55,7 @@ Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
   final url = apiUrl +
       '?steps=' +
       steps.toString() +
-      '&cw=' +
+      '&clockwise=' +
       (clockwise ? 'on' : 'off');
   final response = await http.get(url);
 
@@ -111,6 +111,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 return DropdownMenuItem<int>(
                     value: num + 1, child: Text((num + 1).toString()));
               }).toList(),
+            ),
+            Checkbox(
+              value: clockwise,
+              onChanged: (bool newValue) => setState(() {
+                clockwise = newValue;
+              }),
             ),
             FutureBuilder<SequenceModel>(
               future: sequence,
