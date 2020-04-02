@@ -7,7 +7,9 @@ class SequenceModel {
   factory SequenceModel.fromJson(Map<String, dynamic> json) {
     return SequenceModel(
       startEdge: Edge.fromJson(json['startEdge']),
-      transitions: List.from(json['transitions']).map((t) => Transition.fromJson(t)).toList(),
+      transitions: List.from(json['transitions'])
+          .map((t) => Transition.fromJson(t))
+          .toList(),
     );
   }
 }
@@ -34,6 +36,7 @@ class Transition {
   Transition({this.move, this.entry, this.exit});
 
   factory Transition.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Transition(
       move: Move.fromJson(json['move']),
       entry: Edge.fromJson(json['entry']),

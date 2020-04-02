@@ -4,7 +4,8 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'dart:async';
 import 'dart:convert';
 
-const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json?steps=12';
+const String apiUrl =
+    'http://unroutine-sequences.herokuapp.com/sequences/json?steps=12';
 
 void main() {
   runApp(MyApp());
@@ -95,11 +96,16 @@ class _MyHomePageState extends State<MyHomePage> {
           future: sequence,
           builder: (context, sequence) {
             if (sequence.hasData) {
-              List<Text> children = [Text(sequence.data.startEdge.name)] + sequence.data.transitions.map((Transition transition) => Text(transition.move.name)).toList();
+              List<Text> children = [Text(sequence.data.startEdge.name)] +
+                  sequence.data.transitions
+                      .map((Transition transition) => Text(
+                          transition.move.name +
+                              ' -> ' +
+                              transition.exit.abbreviation))
+                      .toList();
               return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: children
-              );
+                  children: children);
             } else if (sequence.hasError) {
               return Text("${sequence.error}");
             }
