@@ -101,22 +101,35 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            DropdownButton<int>(
-              value: count,
-              onChanged: (int newValue) => setState(() {
-                count = newValue;
-              }),
-              items: Iterable<int>.generate(20).map((int num) {
-                return DropdownMenuItem<int>(
-                    value: num + 1, child: Text((num + 1).toString()));
-              }).toList(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Number of steps'),
+                DropdownButton<int>(
+                  value: count,
+                  onChanged: (int newValue) => setState(() {
+                    count = newValue;
+                  }),
+                  items: Iterable<int>.generate(20).map((int num) {
+                    return DropdownMenuItem<int>(
+                        value: num + 1, child: Text((num + 1).toString()));
+                  }).toList(),
+                ),
+              ],
             ),
-            Checkbox(
-              value: clockwise,
-              onChanged: (bool newValue) => setState(() {
-                clockwise = newValue;
-              }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Clockwise?'),
+                Checkbox(
+                  value: clockwise,
+                  onChanged: (bool newValue) => setState(() {
+                    clockwise = newValue;
+                  }),
+                ),
+              ],
             ),
             FutureBuilder<SequenceModel>(
               future: sequence,
