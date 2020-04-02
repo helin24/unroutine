@@ -73,6 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onRefresh() {
     print('refreshing');
+    setState(() {
+      sequence = fetchSequence();
+    });
   }
 
   @override
