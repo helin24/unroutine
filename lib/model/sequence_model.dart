@@ -36,7 +36,6 @@ class Transition {
   Transition({this.move, this.entry, this.exit});
 
   factory Transition.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Transition(
       move: Move.fromJson(json['move']),
       entry: Edge.fromJson(json['entry']),

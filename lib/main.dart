@@ -4,8 +4,7 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'dart:async';
 import 'dart:convert';
 
-const String apiUrl =
-    'http://unroutine-sequences.herokuapp.com/sequences/json?steps=12';
+const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
 void main() {
   runApp(MyApp());
@@ -52,8 +51,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-Future<SequenceModel> fetchSequence() async {
-  final response = await http.get(apiUrl);
+Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
+  final url = apiUrl +
+      '?steps=' +
+      steps.toString() +
+      '&cw=' +
+      (clockwise ? 'on' : 'off');
+  final response = await http.get(url);
 
   if (response.statusCode == 200) {
     return SequenceModel.fromJson(json.decode(response.body));
@@ -64,17 +68,18 @@ Future<SequenceModel> fetchSequence() async {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<SequenceModel> sequence;
+  bool clockwise = false;
+  int count = 5;
 
   @override
   void initState() {
     super.initState();
-    sequence = fetchSequence();
+    sequence = fetchSequence(count, clockwise);
   }
 
   void _onRefresh() {
-    print('refreshing');
     setState(() {
-      sequence = fetchSequence();
+      sequence = fetchSequence(count, clockwise);
     });
   }
 
