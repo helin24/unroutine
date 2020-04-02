@@ -100,25 +100,39 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: FutureBuilder<SequenceModel>(
-          future: sequence,
-          builder: (context, sequence) {
-            if (sequence.hasData) {
-              List<Text> children = [Text(sequence.data.startEdge.name)] +
-                  sequence.data.transitions
-                      .map((Transition transition) => Text(
-                          transition.move.name +
-                              ' -> ' +
-                              transition.exit.abbreviation))
-                      .toList();
-              return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: children);
-            } else if (sequence.hasError) {
-              return Text("${sequence.error}");
-            }
-            return CircularProgressIndicator();
-          },
+        child: Column(
+          children: <Widget>[
+            DropdownButton<int>(
+              value: count,
+              onChanged: (int newValue) => setState(() {
+                count = newValue;
+              }),
+              items: Iterable<int>.generate(20).map((int num) {
+                return DropdownMenuItem<int>(
+                    value: num + 1, child: Text((num + 1).toString()));
+              }).toList(),
+            ),
+            FutureBuilder<SequenceModel>(
+              future: sequence,
+              builder: (context, sequence) {
+                if (sequence.hasData) {
+                  List<Text> children = [Text(sequence.data.startEdge.name)] +
+                      sequence.data.transitions
+                          .map((Transition transition) => Text(
+                              transition.move.name +
+                                  ' -> ' +
+                                  transition.exit.abbreviation))
+                          .toList();
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: children);
+                } else if (sequence.hasError) {
+                  return Text("${sequence.error}");
+                }
+                return CircularProgressIndicator();
+              },
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
