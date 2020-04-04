@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:unroutine/database.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'database.dart';
 
 const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
@@ -153,10 +156,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 return CircularProgressIndicator();
               },
             ),
-            saved ? Text('Saved!') : IconButton(
-              icon: Icon(Icons.save_alt),
-              onPressed: () => setState(() {saved = true;}),
-            ),
+            saved
+                ? Text('Saved!')
+                : IconButton(
+                    icon: Icon(Icons.save_alt),
+                    onPressed: () {
+                      sequence.then((value) {
+                        DatabaseProvider.db.insertSequence(value);
+                        setState(() {
+                          saved = true;
+                        });
+                      });
+                    },
+                  ),
           ],
         ),
       ),

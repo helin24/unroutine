@@ -3,15 +3,22 @@ import 'dart:convert';
 class SequenceModel {
   final Edge startEdge;
   final List<Transition> transitions;
+  final String name;
+  final DateTime savedOn;
 
-  SequenceModel({this.startEdge, this.transitions});
+  SequenceModel({this.startEdge, this.transitions, this.name, this.savedOn});
 
   factory SequenceModel.fromJson(Map<String, dynamic> json) {
+    print(json['savedOn']);
     return SequenceModel(
+      name: json['name'],
       startEdge: Edge.fromJson(json['startEdge']),
       transitions: List.from(json['transitions'])
           .map((t) => Transition.fromJson(t))
           .toList(),
+      savedOn: json['savedOn'] != null
+          ? DateTime.fromMillisecondsSinceEpoch((json['savedOn'] * 1000).round())
+          : null,
     );
   }
 
