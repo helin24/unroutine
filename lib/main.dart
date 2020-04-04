@@ -70,6 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<SequenceModel> sequence;
   bool clockwise = false;
   int count = 5;
+  bool saved = false;
 
   @override
   void initState() {
@@ -80,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onRefresh() {
     setState(() {
       sequence = fetchSequence(count, clockwise);
+      saved = false;
     });
   }
 
@@ -150,6 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
                 return CircularProgressIndicator();
               },
+            ),
+            saved ? Text('Saved!') : IconButton(
+              icon: Icon(Icons.save_alt),
+              onPressed: () => setState(() {saved = true;}),
             ),
           ],
         ),
