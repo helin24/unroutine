@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class SequenceModel {
   final Edge startEdge;
   final List<Transition> transitions;
@@ -12,6 +14,16 @@ class SequenceModel {
           .toList(),
     );
   }
+
+  Map<String, dynamic> toDatabaseMap() {
+    DateTime now = DateTime.now();
+    return {
+      'name': 'Saved ' + now.toIso8601String(),
+      'startEdge': jsonEncode(startEdge),
+      'transitions': jsonEncode(transitions),
+      'savedOn': now.millisecondsSinceEpoch / 1000,
+    };
+  }
 }
 
 class Edge {
@@ -25,6 +37,13 @@ class Edge {
       name: json['name'],
       abbreviation: json['abbreviation'],
     );
+  }
+
+  Map<String, String> toJson() {
+    return {
+      'name': name,
+      'abbreviation': abbreviation,
+    };
   }
 }
 
@@ -41,6 +60,14 @@ class Transition {
       entry: Edge.fromJson(json['entry']),
       exit: Edge.fromJson(json['exit']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'move': move,
+      'entry': entry,
+      'exit': exit,
+    };
   }
 }
 
@@ -59,5 +86,14 @@ class Move {
       abbreviation: json['abbreviation'],
       category: json['category'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'abbreviation': abbreviation,
+      'category': category,
+    };
   }
 }
