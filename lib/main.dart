@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/database.dart';
 import 'package:unroutine/model/sequence_model.dart';
+import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -88,6 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _pushSaved() {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext context) => Saved()));
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -98,10 +103,15 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text(widget.title),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.folder),
+              onPressed: _pushSaved,
+            ),
+          ]),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.

@@ -9,7 +9,6 @@ class SequenceModel {
   SequenceModel({this.startEdge, this.transitions, this.name, this.savedOn});
 
   factory SequenceModel.fromJson(Map<String, dynamic> json) {
-    print(json['savedOn']);
     return SequenceModel(
       name: json['name'],
       startEdge: Edge.fromJson(json['startEdge']),
