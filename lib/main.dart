@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/database.dart';
 import 'package:unroutine/model/sequence_model.dart';
+import 'package:unroutine/widget/TransitionsColumn.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -90,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _pushSaved() {
-    Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext context) => Saved()));
+    Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (BuildContext context) => Saved()));
   }
 
   @override
@@ -150,16 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               future: sequence,
               builder: (context, sequence) {
                 if (sequence.hasData) {
-                  List<Text> children = [Text(sequence.data.startEdge.name)] +
-                      sequence.data.transitions
-                          .map((Transition transition) => Text(
-                              transition.move.name +
-                                  ' -> ' +
-                                  transition.exit.abbreviation))
-                          .toList();
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: children);
+                  return getTransitionsColumn(sequence.data);
                 } else if (sequence.hasError) {
                   return Text("${sequence.error}");
                 }
