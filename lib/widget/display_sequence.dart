@@ -8,6 +8,8 @@ import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:unroutine/widget/visual_display.dart';
+
 const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
 class DisplaySequence extends StatefulWidget {
@@ -46,7 +48,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
         ]),
         body: TabBarView(children: [
           TextDisplay(sequence: sequence, saved: saved),
-          TextDisplay(sequence: sequence, saved: saved),
+          VisualDisplay(sequence: sequence, saved: saved),
           TextDisplay(sequence: sequence, saved: saved),
         ]),
         bottomNavigationBar: TabBar(
