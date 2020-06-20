@@ -35,39 +35,42 @@ class _DisplaySequenceState extends State<DisplaySequence> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(title: Text(widget.title), actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.folder),
-              onPressed: _pushSaved,
-            ),
-          ]),
-          body: TabBarView(children: [
-            getTransitionsColumn(sequence, saved),
-            getTransitionsColumn(sequence, saved),
-            getTransitionsColumn(sequence, saved),
-          ]),
-          bottomNavigationBar: TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.font_download)),
-              Tab(icon: Icon(Icons.remove_red_eye)),
-              Tab(icon: Icon(Icons.hearing)),
-            ],
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.title), actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.folder),
+            onPressed: _pushSaved,
           ),
-          floatingActionButton: !saved ? FloatingActionButton(
-            child: Icon(Icons.save_alt),
-            tooltip: 'Save sequence',
-            onPressed: () {
-              DatabaseProvider.db.insertSequence(sequence);
-              setState(() {
-                saved = true;
-              });
-            },
-          ) : null,
+        ]),
+        body: TabBarView(children: [
+          getTransitionsColumn(sequence, saved),
+          getTransitionsColumn(sequence, saved),
+          getTransitionsColumn(sequence, saved),
+        ]),
+        bottomNavigationBar: TabBar(
+          tabs: [
+            Tab(icon: Icon(Icons.font_download)),
+            Tab(icon: Icon(Icons.remove_red_eye)),
+            Tab(icon: Icon(Icons.hearing)),
+          ],
+          labelColor: Theme.of(context).accentColor,
+          unselectedLabelColor: Theme.of(context).disabledColor,
         ),
-      );
+        floatingActionButton: !saved
+            ? FloatingActionButton(
+                child: Icon(Icons.save_alt),
+                tooltip: 'Save sequence',
+                onPressed: () {
+                  DatabaseProvider.db.insertSequence(sequence);
+                  setState(() {
+                    saved = true;
+                  });
+                },
+              )
+            : null,
+      ),
+    );
   }
 }
