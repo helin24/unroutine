@@ -35,32 +35,39 @@ class _DisplaySequenceState extends State<DisplaySequence> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title), actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.folder),
-          onPressed: _pushSaved,
-        ),
-      ]),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+    return
+      DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(title: Text(widget.title), actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.folder),
+              onPressed: _pushSaved,
+            ),
+          ]),
+          body: TabBarView(children: [
             getTransitionsColumn(sequence),
-            saved
-                ? Text('Saved!')
-                : IconButton(
-                    icon: Icon(Icons.save_alt),
-                    onPressed: () {
-                      DatabaseProvider.db.insertSequence(sequence);
-                      setState(() {
-                        saved = true;
-                      });
-                    },
-                  ),
-          ],
+            getTransitionsColumn(sequence),
+            getTransitionsColumn(sequence),
+          ]),
+          bottomNavigationBar: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.font_download)),
+              Tab(icon: Icon(Icons.remove_red_eye)),
+              Tab(icon: Icon(Icons.hearing)),
+            ],
+          ),
+          floatingActionButton: !saved ? FloatingActionButton(
+            child: Icon(Icons.save_alt),
+            tooltip: 'Save sequence',
+            onPressed: () {
+              DatabaseProvider.db.insertSequence(sequence);
+              setState(() {
+                saved = true;
+              });
+            },
+          ) : null,
         ),
-      ),
-    );
+      );
   }
 }
