@@ -1,16 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unroutine/util/constants.dart';
 
 class UserSettings extends StatefulWidget {
   @override
   _UserSettingsState createState() => _UserSettingsState();
 }
-
-const String CLOCKWISE_PREFERENCE = 'clockwise';
-const String LEVEL_PREFERENCE = 'level';
-// TODO: These should probably come from server eventually
-const List<String> levels = ['Pre-bronze', 'Bronze', 'Silver', 'Gold'];
 
 class _UserSettingsState extends State<UserSettings> {
   bool clockwise = false;

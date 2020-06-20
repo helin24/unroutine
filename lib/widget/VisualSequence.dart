@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/database.dart';
+import 'package:unroutine/util/constants.dart';
 import 'package:unroutine/widget/TransitionsColumn.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
@@ -43,7 +45,15 @@ class _VisualSequenceState extends State<VisualSequence> {
   @override
   void initState() {
     super.initState();
-    sequence = fetchSequence(count, clockwise);
+    SharedPreferences.getInstance().then((preferences) {
+      if (preferences.containsKey(CLOCKWISE_PREFERENCE)) {
+        final clockwiseValue = preferences.getBool(CLOCKWISE_PREFERENCE);
+        setState(() {
+          clockwise = clockwiseValue;
+        });
+        sequence = fetchSequence(count, clockwise);
+      }
+    });
   }
 
   void _onRefresh() {
@@ -61,14 +71,12 @@ class _VisualSequenceState extends State<VisualSequence> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(widget.title),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.folder),
-              onPressed: _pushSaved,
-            ),
-          ]),
+      appBar: AppBar(title: Text(widget.title), actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.folder),
+          onPressed: _pushSaved,
+        ),
+      ]),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -89,18 +97,6 @@ class _VisualSequenceState extends State<VisualSequence> {
                 ),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Clockwise?'),
-                Checkbox(
-                  value: clockwise,
-                  onChanged: (bool newValue) => setState(() {
-                    clockwise = newValue;
-                  }),
-                ),
-              ],
-            ),
             FutureBuilder<SequenceModel>(
               future: sequence,
               builder: (context, sequence) {
@@ -115,16 +111,16 @@ class _VisualSequenceState extends State<VisualSequence> {
             saved
                 ? Text('Saved!')
                 : IconButton(
-              icon: Icon(Icons.save_alt),
-              onPressed: () {
-                sequence.then((value) {
-                  DatabaseProvider.db.insertSequence(value);
-                  setState(() {
-                    saved = true;
-                  });
-                });
-              },
-            ),
+                    icon: Icon(Icons.save_alt),
+                    onPressed: () {
+                      sequence.then((value) {
+                        DatabaseProvider.db.insertSequence(value);
+                        setState(() {
+                          saved = true;
+                        });
+                      });
+                    },
+                  ),
           ],
         ),
       ),
