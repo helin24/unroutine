@@ -40,6 +40,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
   bool clockwise = false;
   int count = 5;
   bool pressed = false;
+  SequenceModel sequence;
 
   @override
   void initState() {
@@ -61,6 +62,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
     fetchSequence(count, clockwise).then((result) {
       setState(() {
         pressed = false;
+        sequence = result;
       });
       Navigator.push(
         context,
@@ -70,6 +72,18 @@ class _GenerateSequenceState extends State<GenerateSequence> {
         ),
       );
     });
+  }
+
+  void _onReturnPressed() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => TextSequence(
+          title: 'Generated',
+          sequence: sequence,
+        ),
+      ),
+    );
   }
 
   void _pushSaved() {
@@ -110,11 +124,16 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                 ? CircularProgressIndicator()
                 : FlatButton(
                     onPressed: _onGeneratePressed,
-                    child: Text('Generate'),
-                  )
+                    child: Text('Generate new'),
+                  ),
           ],
         ),
       ),
+      floatingActionButton: sequence != null ? FloatingActionButton(
+        onPressed: _onReturnPressed,
+        tooltip: 'Return to previous sequence',
+        child: Icon(Icons.arrow_forward),
+      ) : null,
     );
   }
 }
