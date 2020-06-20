@@ -52,7 +52,7 @@ class SequenceDetail extends StatelessWidget {
         title: Text(sequence.name),
       ),
       body: Center(
-        child: getTransitionsColumn(sequence),
+        child: getTransitionsColumn(sequence, true),
       ),
     );
   }

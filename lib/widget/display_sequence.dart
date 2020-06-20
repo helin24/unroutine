@@ -46,9 +46,9 @@ class _DisplaySequenceState extends State<DisplaySequence> {
             ),
           ]),
           body: TabBarView(children: [
-            getTransitionsColumn(sequence),
-            getTransitionsColumn(sequence),
-            getTransitionsColumn(sequence),
+            getTransitionsColumn(sequence, saved),
+            getTransitionsColumn(sequence, saved),
+            getTransitionsColumn(sequence, saved),
           ]),
           bottomNavigationBar: TabBar(
             tabs: [

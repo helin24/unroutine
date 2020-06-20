@@ -67,8 +67,10 @@ class _GenerateSequenceState extends State<GenerateSequence> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) =>
-              DisplaySequence(title: 'Generated', sequence: result),
+          builder: (BuildContext context) => DisplaySequence(
+            title: 'Generated',
+            sequence: result,
+          ),
         ),
       );
     });
@@ -129,11 +131,13 @@ class _GenerateSequenceState extends State<GenerateSequence> {
           ],
         ),
       ),
-      floatingActionButton: sequence != null ? FloatingActionButton(
-        onPressed: _onReturnPressed,
-        tooltip: 'Return to previous sequence',
-        child: Icon(Icons.arrow_forward),
-      ) : null,
+      floatingActionButton: sequence != null
+          ? FloatingActionButton(
+              onPressed: _onReturnPressed,
+              tooltip: 'Return to previous sequence',
+              child: Icon(Icons.arrow_forward),
+            )
+          : null,
     );
   }
 }
