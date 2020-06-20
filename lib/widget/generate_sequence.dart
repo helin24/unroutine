@@ -8,7 +8,7 @@ import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:unroutine/widget/text_sequence.dart';
+import 'package:unroutine/widget/display_sequence.dart';
 
 const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
@@ -68,7 +68,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) =>
-              TextSequence(title: 'Generated', sequence: result),
+              DisplaySequence(title: 'Generated', sequence: result),
         ),
       );
     });
@@ -78,7 +78,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => TextSequence(
+        builder: (BuildContext context) => DisplaySequence(
           title: 'Generated',
           sequence: sequence,
         ),
