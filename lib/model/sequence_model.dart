@@ -35,13 +35,15 @@ class SequenceModel {
 class Edge {
   final String name;
   final String abbreviation;
+  final String foot;
 
-  Edge({this.name, this.abbreviation});
+  Edge({this.name, this.abbreviation, this.foot});
 
   factory Edge.fromJson(Map<String, dynamic> json) {
     return Edge(
       name: json['name'],
       abbreviation: json['abbreviation'],
+      foot: json['foot'],
     );
   }
 
@@ -49,6 +51,7 @@ class Edge {
     return {
       'name': name,
       'abbreviation': abbreviation,
+      'foot': foot,
     };
   }
 }
