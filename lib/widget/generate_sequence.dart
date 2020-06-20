@@ -39,6 +39,7 @@ Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
 class _GenerateSequenceState extends State<GenerateSequence> {
   bool clockwise = false;
   int count = 5;
+  bool pressed = false;
 
   @override
   void initState() {
@@ -53,8 +54,14 @@ class _GenerateSequenceState extends State<GenerateSequence> {
     });
   }
 
-  void _onRefresh() {
+  void _onGeneratePressed() {
+    setState(() {
+      pressed = true;
+    });
     fetchSequence(count, clockwise).then((result) {
+      setState(() {
+        pressed = false;
+      });
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -99,14 +106,15 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                 ),
               ],
             ),
+            pressed
+                ? CircularProgressIndicator()
+                : FlatButton(
+                    onPressed: _onGeneratePressed,
+                    child: Text('Generate'),
+                  )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onRefresh,
-        tooltip: 'Increment',
-        child: Icon(Icons.refresh),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
