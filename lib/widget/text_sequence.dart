@@ -10,15 +10,15 @@ import 'dart:convert';
 
 const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
-class VisualSequence extends StatefulWidget {
-  VisualSequence({Key key, this.title, this.sequence}) : super(key: key);
+class TextSequence extends StatefulWidget {
+  TextSequence({Key key, this.title, this.sequence}) : super(key: key);
 
   final String title;
   final SequenceModel sequence;
 
   @override
-  _VisualSequenceState createState() =>
-      _VisualSequenceState(title: title, sequence: sequence);
+  _TextSequenceState createState() =>
+      _TextSequenceState(title: title, sequence: sequence);
 }
 
 Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
@@ -36,12 +36,12 @@ Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
   }
 }
 
-class _VisualSequenceState extends State<VisualSequence> {
+class _TextSequenceState extends State<TextSequence> {
   bool saved = false;
   final String title;
   final SequenceModel sequence;
 
-  _VisualSequenceState({this.title, this.sequence});
+  _TextSequenceState({this.title, this.sequence});
 
   void _pushSaved() {
     Navigator.of(context).push(
