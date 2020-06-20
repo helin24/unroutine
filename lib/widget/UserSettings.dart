@@ -65,14 +65,20 @@ class _UserSettingsState extends State<UserSettings> {
                 DropdownButton<String>(
                   value: level,
                   onChanged: onLevelChanged,
-                  items: levels.map(
-                    (String level) => DropdownMenuItem<String>(
-                      value: level,
-                      child: Text(level),
-                    ),
-                  ).toList(),
+                  items: levels
+                      .map(
+                        (String level) => DropdownMenuItem<String>(
+                          value: level,
+                          child: Text(level),
+                        ),
+                      )
+                      .toList(),
                 ),
               ],
+            ),
+            FlatButton(
+              onPressed: onGeneratePressed,
+              child: Text('Generate'),
             ),
           ],
         ),
@@ -92,5 +98,9 @@ class _UserSettingsState extends State<UserSettings> {
       level = newValue;
     });
     preferences.setString(LEVEL_PREFERENCE, newValue);
+  }
+
+  onGeneratePressed() {
+    Navigator.pushNamed(context, '/generate');
   }
 }

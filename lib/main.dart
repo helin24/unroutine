@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unroutine/widget/UserSettings.dart';
+import 'package:unroutine/widget/VisualSequence.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,6 +15,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: UserSettings(),
+      routes: <String, WidgetBuilder>{
+        '/generate': (BuildContext context) =>
+            VisualSequence(title: 'Generate a sequence'),
+      },
     );
   }
 }
