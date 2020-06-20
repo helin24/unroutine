@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/database.dart';
+import 'package:unroutine/widget/audio_display.dart';
 import 'package:unroutine/widget/text_display.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
@@ -49,7 +50,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
         body: TabBarView(children: [
           TextDisplay(sequence: sequence, saved: saved),
           VisualDisplay(sequence: sequence, saved: saved),
-          TextDisplay(sequence: sequence, saved: saved),
+          AudioDisplay(sequence: sequence, saved: saved),
         ]),
         bottomNavigationBar: TabBar(
           tabs: [
