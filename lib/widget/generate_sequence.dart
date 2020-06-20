@@ -3,12 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:unroutine/database.dart';
 import 'package:unroutine/util/constants.dart';
-import 'package:unroutine/widget/transitions_column.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:unroutine/widget/visual_sequence.dart';
 
 const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
@@ -37,10 +37,8 @@ Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
 }
 
 class _GenerateSequenceState extends State<GenerateSequence> {
-  Future<SequenceModel> sequence;
   bool clockwise = false;
   int count = 5;
-  bool saved = false;
 
   @override
   void initState() {
@@ -51,15 +49,19 @@ class _GenerateSequenceState extends State<GenerateSequence> {
         setState(() {
           clockwise = clockwiseValue;
         });
-        sequence = fetchSequence(count, clockwise);
       }
     });
   }
 
   void _onRefresh() {
-    setState(() {
-      sequence = fetchSequence(count, clockwise);
-      saved = false;
+    fetchSequence(count, clockwise).then((result) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>
+              VisualSequence(title: 'Generated', sequence: result),
+        ),
+      );
     });
   }
 
@@ -97,30 +99,6 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                 ),
               ],
             ),
-            FutureBuilder<SequenceModel>(
-              future: sequence,
-              builder: (context, sequence) {
-                if (sequence.hasData) {
-                  return getTransitionsColumn(sequence.data);
-                } else if (sequence.hasError) {
-                  return Text("${sequence.error}");
-                }
-                return CircularProgressIndicator();
-              },
-            ),
-            saved
-                ? Text('Saved!')
-                : IconButton(
-                    icon: Icon(Icons.save_alt),
-                    onPressed: () {
-                      sequence.then((value) {
-                        DatabaseProvider.db.insertSequence(value);
-                        setState(() {
-                          saved = true;
-                        });
-                      });
-                    },
-                  ),
           ],
         ),
       ),
