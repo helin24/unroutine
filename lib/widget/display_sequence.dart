@@ -21,21 +21,6 @@ class DisplaySequence extends StatefulWidget {
       _DisplaySequenceState(title: title, sequence: sequence);
 }
 
-Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
-  final url = apiUrl +
-      '?steps=' +
-      steps.toString() +
-      '&clockwise=' +
-      (clockwise ? 'on' : 'off');
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    return SequenceModel.fromJson(json.decode(response.body));
-  } else {
-    throw Exception('Failed to load sequence');
-  }
-}
-
 class _DisplaySequenceState extends State<DisplaySequence> {
   bool saved = false;
   final String title;
