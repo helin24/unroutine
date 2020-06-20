@@ -3,22 +3,22 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:unroutine/database.dart';
 import 'package:unroutine/util/constants.dart';
-import 'package:unroutine/widget/TransitionsColumn.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:unroutine/widget/text_sequence.dart';
+
 const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
 
-class VisualSequence extends StatefulWidget {
-  VisualSequence({Key key, this.title}) : super(key: key);
+class GenerateSequence extends StatefulWidget {
+  GenerateSequence({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _VisualSequenceState createState() => _VisualSequenceState();
+  _GenerateSequenceState createState() => _GenerateSequenceState();
 }
 
 Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
@@ -36,11 +36,11 @@ Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
   }
 }
 
-class _VisualSequenceState extends State<VisualSequence> {
-  Future<SequenceModel> sequence;
+class _GenerateSequenceState extends State<GenerateSequence> {
   bool clockwise = false;
   int count = 5;
-  bool saved = false;
+  bool pressed = false;
+  SequenceModel sequence;
 
   @override
   void initState() {
@@ -51,16 +51,39 @@ class _VisualSequenceState extends State<VisualSequence> {
         setState(() {
           clockwise = clockwiseValue;
         });
-        sequence = fetchSequence(count, clockwise);
       }
     });
   }
 
-  void _onRefresh() {
+  void _onGeneratePressed() {
     setState(() {
-      sequence = fetchSequence(count, clockwise);
-      saved = false;
+      pressed = true;
     });
+    fetchSequence(count, clockwise).then((result) {
+      setState(() {
+        pressed = false;
+        sequence = result;
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) =>
+              TextSequence(title: 'Generated', sequence: result),
+        ),
+      );
+    });
+  }
+
+  void _onReturnPressed() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => TextSequence(
+          title: 'Generated',
+          sequence: sequence,
+        ),
+      ),
+    );
   }
 
   void _pushSaved() {
@@ -97,38 +120,20 @@ class _VisualSequenceState extends State<VisualSequence> {
                 ),
               ],
             ),
-            FutureBuilder<SequenceModel>(
-              future: sequence,
-              builder: (context, sequence) {
-                if (sequence.hasData) {
-                  return getTransitionsColumn(sequence.data);
-                } else if (sequence.hasError) {
-                  return Text("${sequence.error}");
-                }
-                return CircularProgressIndicator();
-              },
-            ),
-            saved
-                ? Text('Saved!')
-                : IconButton(
-                    icon: Icon(Icons.save_alt),
-                    onPressed: () {
-                      sequence.then((value) {
-                        DatabaseProvider.db.insertSequence(value);
-                        setState(() {
-                          saved = true;
-                        });
-                      });
-                    },
+            pressed
+                ? CircularProgressIndicator()
+                : FlatButton(
+                    onPressed: _onGeneratePressed,
+                    child: Text('Generate new'),
                   ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _onRefresh,
-        tooltip: 'Increment',
-        child: Icon(Icons.refresh),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: sequence != null ? FloatingActionButton(
+        onPressed: _onReturnPressed,
+        tooltip: 'Return to previous sequence',
+        child: Icon(Icons.arrow_forward),
+      ) : null,
     );
   }
 }
