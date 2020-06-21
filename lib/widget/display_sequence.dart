@@ -4,6 +4,7 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/database.dart';
 import 'package:unroutine/widget/audio_display.dart';
+import 'package:unroutine/widget/manage_display.dart';
 import 'package:unroutine/widget/text_display.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
@@ -39,7 +40,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(title: Text(widget.title), actions: <Widget>[
           IconButton(
@@ -51,12 +52,14 @@ class _DisplaySequenceState extends State<DisplaySequence> {
           TextDisplay(sequence: sequence, saved: saved),
           VisualDisplay(sequence: sequence, saved: saved),
           AudioDisplay(sequence: sequence, saved: saved),
+          ManageDisplay(sequence: sequence, saved: saved),
         ]),
         bottomNavigationBar: TabBar(
           tabs: [
             Tab(icon: Icon(Icons.font_download)),
             Tab(icon: Icon(Icons.remove_red_eye)),
             Tab(icon: Icon(Icons.hearing)),
+            Tab(icon: Icon(Icons.settings)),
           ],
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).disabledColor,
