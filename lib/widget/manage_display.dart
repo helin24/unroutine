@@ -3,21 +3,20 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:flutter/material.dart';
 
 class ManageDisplay extends StatelessWidget {
-  ManageDisplay({this.sequence, this.saved});
+  ManageDisplay({this.sequence, this.saved, this.onUnsave});
 
   final SequenceModel sequence;
   final bool saved;
+  final Function() onUnsave;
 
   @override
   Widget build(BuildContext context) {
-    List<Text> children = [
-      Text(sequence.startEdge.foot + sequence.startEdge.abbreviation)
-    ] +
-        sequence.transitions.map(getTransition).toList();
-
+    List<Widget> children = [];
     if (saved) {
-      children.add(Text(''));
-      children.add(Text('Saved!'));
+      children.add(FlatButton(
+        onPressed: onUnsave,
+        child: Text('Unsave'),
+      ));
     }
 
     return Column(
