@@ -34,6 +34,7 @@ class _ManageDisplayState extends State<ManageDisplay> {
         setState(() {
           rating = rating;
         });
+        // TODO: Add call to server.
       },
     ));
 
