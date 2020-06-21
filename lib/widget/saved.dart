@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:unroutine/database.dart';
 import 'package:unroutine/model/sequence_model.dart';
-import 'package:unroutine/widget/transitions_column.dart';
+import 'package:unroutine/widget/text_display.dart';
 
 class Saved extends StatelessWidget {
   @override
@@ -52,7 +52,7 @@ class SequenceDetail extends StatelessWidget {
         title: Text(sequence.name),
       ),
       body: Center(
-        child: getTransitionsColumn(sequence),
+        child: TextDisplay(sequence: sequence, saved: true),
       ),
     );
   }
