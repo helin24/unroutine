@@ -9,25 +9,22 @@ import 'package:unroutine/widget/saved.dart';
 
 import 'package:unroutine/widget/visual_display.dart';
 
-const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
-
 class DisplaySequence extends StatefulWidget {
-  DisplaySequence({Key key, this.title, this.sequence}) : super(key: key);
+  DisplaySequence({Key key, this.sequence}) : super(key: key);
 
-  final String title;
   final SequenceModel sequence;
 
   @override
   _DisplaySequenceState createState() =>
-      _DisplaySequenceState(title: title, sequence: sequence);
+      _DisplaySequenceState(sequence: sequence);
 }
 
 class _DisplaySequenceState extends State<DisplaySequence> {
   bool saved = false;
-  final String title;
+  final String title = 'Generated';
   final SequenceModel sequence;
 
-  _DisplaySequenceState({this.title, this.sequence});
+  _DisplaySequenceState({this.sequence});
 
   void _pushSaved() {
     Navigator.of(context).push(
@@ -46,7 +43,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(title: Text(widget.title), actions: <Widget>[
+        appBar: AppBar(title: Text(title), actions: <Widget>[
           IconButton(
             icon: Icon(Icons.folder),
             onPressed: _pushSaved,

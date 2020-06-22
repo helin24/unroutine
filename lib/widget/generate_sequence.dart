@@ -68,7 +68,6 @@ class _GenerateSequenceState extends State<GenerateSequence> {
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => DisplaySequence(
-            title: 'Generated',
             sequence: result,
           ),
         ),
@@ -81,7 +80,6 @@ class _GenerateSequenceState extends State<GenerateSequence> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => DisplaySequence(
-          title: 'Generated',
           sequence: sequence,
         ),
       ),
