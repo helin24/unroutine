@@ -50,10 +50,9 @@ class PopupMenu extends StatelessWidget {
 }
 
 class Choice {
-  const Choice({this.title, this.icon, this.menuItem, this.onNavigate});
+  const Choice({this.title, this.menuItem, this.onNavigate});
 
   final String title;
-  final IconData icon;
   final MenuItemKey menuItem;
   final Function() onNavigate;
 }
@@ -61,42 +60,14 @@ class Choice {
 const List<Choice> choices = const <Choice>[
   const Choice(
       title: 'Generate',
-      icon: Icons.directions_car,
       menuItem: MenuItemKey.GENERATE),
   const Choice(
       title: 'Settings',
-      icon: Icons.directions_bike,
       menuItem: MenuItemKey.SETTINGS),
   const Choice(
       title: 'Saved Sequences',
-      icon: Icons.directions_boat,
       menuItem: MenuItemKey.SAVED_SEQUENCES),
   const Choice(
       title: 'Saved Videos',
-      icon: Icons.directions_bus,
       menuItem: MenuItemKey.SAVED_VIDEO),
 ];
-
-class ChoiceCard extends StatelessWidget {
-  const ChoiceCard({Key key, this.choice}) : super(key: key);
-
-  final Choice choice;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.headline4;
-    return Card(
-      color: Colors.white,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(choice.icon, size: 128.0, color: textStyle.color),
-            Text(choice.title, style: textStyle),
-          ],
-        ),
-      ),
-    );
-  }
-}
