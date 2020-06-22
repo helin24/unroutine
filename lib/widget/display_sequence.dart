@@ -4,30 +4,28 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:unroutine/database.dart';
 import 'package:unroutine/widget/audio_display.dart';
 import 'package:unroutine/widget/manage_display.dart';
+import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/text_display.dart';
 import 'package:unroutine/widget/saved.dart';
 
 import 'package:unroutine/widget/visual_display.dart';
 
-const String apiUrl = 'http://unroutine-sequences.herokuapp.com/sequences/json';
-
 class DisplaySequence extends StatefulWidget {
-  DisplaySequence({Key key, this.title, this.sequence}) : super(key: key);
+  DisplaySequence({Key key, this.sequence}) : super(key: key);
 
-  final String title;
   final SequenceModel sequence;
 
   @override
   _DisplaySequenceState createState() =>
-      _DisplaySequenceState(title: title, sequence: sequence);
+      _DisplaySequenceState(sequence: sequence);
 }
 
 class _DisplaySequenceState extends State<DisplaySequence> {
   bool saved = false;
-  final String title;
+  final String title = 'Generated';
   final SequenceModel sequence;
 
-  _DisplaySequenceState({this.title, this.sequence});
+  _DisplaySequenceState({this.sequence});
 
   void _pushSaved() {
     Navigator.of(context).push(
@@ -46,17 +44,21 @@ class _DisplaySequenceState extends State<DisplaySequence> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(title: Text(widget.title), actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.folder),
-            onPressed: _pushSaved,
-          ),
-        ]),
+        appBar: AppBar(
+          title: Text(title),
+          actions: <Widget>[
+            PopupMenu('Sequence', MenuItemKey.GENERATE),
+          ],
+        ),
         body: TabBarView(children: [
           TextDisplay(sequence: sequence, saved: saved),
           VisualDisplay(sequence: sequence, saved: saved),
           AudioDisplay(sequence: sequence, saved: saved),
-          ManageDisplay(sequence: sequence, saved: saved, onUnsave: _onUnsave,),
+          ManageDisplay(
+            sequence: sequence,
+            saved: saved,
+            onUnsave: _onUnsave,
+          ),
         ]),
         bottomNavigationBar: TabBar(
           tabs: [
