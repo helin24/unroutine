@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:unroutine/database.dart';
 import 'package:unroutine/model/sequence_model.dart';
+import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/text_display.dart';
 
 class Saved extends StatelessWidget {
@@ -10,6 +11,9 @@ class Saved extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Saved sequences'),
+        actions: <Widget>[
+          PopupMenu('Saved sequences', MenuItemKey.SAVED_VIDEO),
+        ],
       ),
       body: Center(
         child: FutureBuilder<List<SequenceModel>>(

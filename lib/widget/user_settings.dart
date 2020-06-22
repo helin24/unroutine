@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unroutine/util/constants.dart';
+import 'package:unroutine/widget/popup_menu.dart';
 
 class UserSettings extends StatefulWidget {
   @override
@@ -38,6 +39,9 @@ class _UserSettingsState extends State<UserSettings> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Unroutine settings'),
+        actions: <Widget>[
+          PopupMenu('Settings', MenuItemKey.SETTINGS),
+        ],
       ),
       body: Center(
         child: Column(

@@ -4,6 +4,7 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:unroutine/database.dart';
 import 'package:unroutine/widget/audio_display.dart';
 import 'package:unroutine/widget/manage_display.dart';
+import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/text_display.dart';
 import 'package:unroutine/widget/saved.dart';
 
@@ -43,17 +44,21 @@ class _DisplaySequenceState extends State<DisplaySequence> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(title: Text(title), actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.folder),
-            onPressed: _pushSaved,
-          ),
-        ]),
+        appBar: AppBar(
+          title: Text(title),
+          actions: <Widget>[
+            PopupMenu('Sequence', MenuItemKey.GENERATE),
+          ],
+        ),
         body: TabBarView(children: [
           TextDisplay(sequence: sequence, saved: saved),
           VisualDisplay(sequence: sequence, saved: saved),
           AudioDisplay(sequence: sequence, saved: saved),
-          ManageDisplay(sequence: sequence, saved: saved, onUnsave: _onUnsave,),
+          ManageDisplay(
+            sequence: sequence,
+            saved: saved,
+            onUnsave: _onUnsave,
+          ),
         ]),
         bottomNavigationBar: TabBar(
           tabs: [
