@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/util/constants.dart';
+import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/saved.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -95,10 +96,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title), actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.folder),
-          onPressed: _pushSaved,
-        ),
+        PopupMenu('Title', MenuItemKey.GENERATE),
       ]),
       body: Center(
         child: Column(
