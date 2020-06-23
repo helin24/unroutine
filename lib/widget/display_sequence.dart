@@ -6,7 +6,7 @@ import 'package:unroutine/widget/audio_display.dart';
 import 'package:unroutine/widget/manage_display.dart';
 import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/text_display.dart';
-import 'package:unroutine/widget/saved.dart';
+import 'package:unroutine/widget/saved_sequences.dart';
 
 import 'package:unroutine/widget/visual_display.dart';
 
@@ -26,11 +26,6 @@ class _DisplaySequenceState extends State<DisplaySequence> {
   final SequenceModel sequence;
 
   _DisplaySequenceState({this.sequence});
-
-  void _pushSaved() {
-    Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (BuildContext context) => Saved()));
-  }
 
   void _onUnsave() {
     setState(() {
