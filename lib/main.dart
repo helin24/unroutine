@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:unroutine/widget/saved.dart';
+import 'package:unroutine/widget/saved_sequences.dart';
 import 'package:unroutine/widget/user_settings.dart';
 import 'package:unroutine/widget/generate_sequence.dart';
 
@@ -50,9 +50,9 @@ class _MyAppState extends State<MyApp> {
         '/generate': (BuildContext context) =>
             GenerateSequence(title: 'Generate a sequence'),
         '/settings': (BuildContext context) => UserSettings(),
-        '/saved_sequences': (BuildContext context) => Saved(),
+        '/saved_sequences': (BuildContext context) => SavedSequences(),
         // TODO: Add this page
-        '/saved_videos': (BuildContext context) => Saved(),
+        '/saved_videos': (BuildContext context) => SavedSequences(),
       },
     );
   }

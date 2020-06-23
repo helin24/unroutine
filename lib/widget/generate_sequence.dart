@@ -5,7 +5,7 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:unroutine/util/constants.dart';
 import 'package:unroutine/widget/popup_menu.dart';
-import 'package:unroutine/widget/saved.dart';
+import 'package:unroutine/widget/saved_sequences.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -89,7 +89,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
 
   void _pushSaved() {
     Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (BuildContext context) => Saved()));
+        MaterialPageRoute<void>(builder: (BuildContext context) => SavedSequences()));
   }
 
   @override

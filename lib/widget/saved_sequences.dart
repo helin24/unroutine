@@ -5,7 +5,7 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/text_display.dart';
 
-class Saved extends StatelessWidget {
+class SavedSequences extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
