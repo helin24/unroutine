@@ -5,14 +5,14 @@ import 'package:unroutine/model/sequence_model.dart';
 import 'package:unroutine/widget/display_sequence.dart';
 import 'package:unroutine/widget/popup_menu.dart';
 
-class SavedSequences extends StatelessWidget {
+class SavedVideos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Saved sequences'),
+        title: Text('Saved videos'),
         actions: <Widget>[
-          PopupMenu('Saved sequences', MenuItemKey.SAVED_SEQUENCES),
+          PopupMenu('Saved videos', MenuItemKey.SAVED_VIDEO),
         ],
       ),
       body: Center(
