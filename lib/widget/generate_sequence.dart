@@ -87,11 +87,6 @@ class _GenerateSequenceState extends State<GenerateSequence> {
     );
   }
 
-  void _pushSaved() {
-    Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (BuildContext context) => SavedSequences()));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

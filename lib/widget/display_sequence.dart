@@ -27,11 +27,6 @@ class _DisplaySequenceState extends State<DisplaySequence> {
 
   _DisplaySequenceState({this.sequence});
 
-  void _pushSaved() {
-    Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (BuildContext context) => SavedSequences()));
-  }
-
   void _onUnsave() {
     setState(() {
       saved = false;
