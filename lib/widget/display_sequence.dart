@@ -10,6 +10,8 @@ import 'package:unroutine/widget/saved_sequences.dart';
 
 import 'package:unroutine/widget/visual_display.dart';
 
+import 'camera_display.dart';
+
 class DisplaySequence extends StatefulWidget {
   DisplaySequence({Key key, this.sequence}) : super(key: key);
 
@@ -37,7 +39,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),
@@ -54,6 +56,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
             saved: saved,
             onUnsave: _onUnsave,
           ),
+          CameraDisplay(sequence: sequence),
         ]),
         bottomNavigationBar: TabBar(
           tabs: [
@@ -61,6 +64,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
             Tab(icon: Icon(Icons.remove_red_eye)),
             Tab(icon: Icon(Icons.hearing)),
             Tab(icon: Icon(Icons.settings)),
+            Tab(icon: Icon(Icons.videocam)),
           ],
           labelColor: Theme.of(context).accentColor,
           unselectedLabelColor: Theme.of(context).disabledColor,
