@@ -46,12 +46,12 @@ class _CameraDisplayState extends State<CameraDisplay> {
   }
 
   Future<void> _record() async {
-    Directory tempDir = await getTemporaryDirectory();
+    Directory tempDir = await getExternalStorageDirectory();
     String tempPath = tempDir.path;
     print('tempPath: ' + tempPath);
 
     controller
-        .startVideoRecording('Pictures/test')
+        .startVideoRecording(tempPath + '/test')
         .then((value) => setState(() {
               _recording = true;
             }));
