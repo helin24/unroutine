@@ -46,12 +46,12 @@ class _CameraDisplayState extends State<CameraDisplay> {
   }
 
   Future<void> _record() async {
+    // TODO: Change to temp directory after implementing uploading
     Directory tempDir = await getExternalStorageDirectory();
     String tempPath = tempDir.path;
-    print('tempPath: ' + tempPath);
 
     controller
-        .startVideoRecording(tempPath + '/test')
+        .startVideoRecording(tempPath + '/' + DateTime.now().toString())
         .then((value) => setState(() {
               _recording = true;
             }));
@@ -81,7 +81,7 @@ class _CameraDisplayState extends State<CameraDisplay> {
               child: CameraPreview(controller)),
         ),
         IconButton(
-          icon: Icon(Icons.videocam),
+          icon: Icon(_recording ? Icons.stop : Icons.videocam),
           onPressed: _recording ? _stopRecording : _record,
         ),
       ],
