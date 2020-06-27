@@ -51,7 +51,7 @@ class _CameraDisplayState extends State<CameraDisplay> {
     String tempPath = tempDir.path;
 
     controller
-        .startVideoRecording(tempPath + '/' + DateTime.now().toString())
+        .startVideoRecording(tempPath + '/' + DateTime.now().toString() + '.mp4')
         .then((value) => setState(() {
               _recording = true;
             }));
