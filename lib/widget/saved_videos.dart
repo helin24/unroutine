@@ -5,9 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:unroutine/database.dart';
-import 'package:unroutine/model/sequence_model.dart';
-import 'package:unroutine/widget/display_sequence.dart';
 import 'package:unroutine/widget/popup_menu.dart';
 
 class SavedVideos extends StatefulWidget {
