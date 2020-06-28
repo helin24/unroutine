@@ -45,5 +45,9 @@
     <string>Can I use the camera please?</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Can I use the mic please?</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Speech recognition can be used to control playback</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Microphone usage is needed for speech recognition control</string>
 </dict>
 </plist>

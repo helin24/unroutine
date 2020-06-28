@@ -6,7 +6,6 @@ import 'package:unroutine/widget/audio_display.dart';
 import 'package:unroutine/widget/manage_display.dart';
 import 'package:unroutine/widget/popup_menu.dart';
 import 'package:unroutine/widget/text_display.dart';
-import 'package:unroutine/widget/saved_sequences.dart';
 
 import 'package:unroutine/widget/visual_display.dart';
 
