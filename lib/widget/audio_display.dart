@@ -24,25 +24,36 @@ class _AudioDisplayState extends State<AudioDisplay> {
   }
 
   final AudioPlayer audioPlayer = AudioPlayer();
+  final SpeechToText _speech = SpeechToText();
+  int _errorCount = 0;
 
   Future<void> _setUpSpeech() async {
-    SpeechToText speech = SpeechToText();
-    bool available = await speech.initialize( onStatus: _statusListener, onError: _errorListener );
+    bool available = await _speech.initialize( onStatus: _statusListener, onError: _errorListener );
     if ( available ) {
-      print('this worked');
-      speech.listen( onResult: _resultListener );
+      _startListener();
     }
     else {
       print("The user has denied the use of speech recognition.");
     }
   }
 
+  void _startListener() {
+    _speech.listen(onResult: _resultListener);
+  }
+
   void _resultListener(SpeechRecognitionResult result) {
-    print('resultListener ' + result.alternates.map((e) => e.recognizedWords).join(' '));
+    if (result.alternates.map((e) => e.recognizedWords).join(' ').contains('play')) {
+      _play();
+    }
+    _startListener();
   }
 
   void _errorListener(SpeechRecognitionError error) {
     print('errorListener ' + error.toString());
+    _errorCount += 1;
+    if (_errorCount < 5) {
+      _startListener();
+    }
   }
 
   void _statusListener(String input) {
