@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +38,7 @@ class SequencePainter extends CustomPainter {
     _leftPaint = Paint();
     _leftPaint.color = Colors.lightGreen;
     _leftPaint.strokeWidth = 4;
+    _leftPaint.style = PaintingStyle.stroke;
 
     // TODO: Need a better way to distinguish backward vs. forward
     _leftBackPaint = Paint();
@@ -85,7 +84,7 @@ class SequencePainter extends CustomPainter {
     );
 
     for (var transition in sequence.transitions) {
-      EndPoint result = drawTransition(canvas, transition, offset, 0);
+      EndPoint result = drawTransition(canvas, transition, offset, direction);
       offset = result.offset;
       direction = result.direction;
     }
@@ -97,27 +96,29 @@ class SequencePainter extends CustomPainter {
     Offset endOffset;
     if (transition.move.abbreviation == 'Spiral') {
       return drawSpiral(canvas, transition, start, travelDirection, getPaint);
+    } else if (transition.move.abbreviation == 'Step') {
+      return drawStep(canvas, transition, start, travelDirection, getPaint);
     } else {
-      canvas.drawCircle(
-        start,
-        3,
-        getPaint(
-          transition.entry.foot,
-          transition.entry.abbreviation,
-        ),
-      );
+    canvas.drawCircle(
+    start,
+    3,
+    getPaint(
+    transition.entry.foot,
+    transition.entry.abbreviation,
+    ),
+    );
 
-      endOffset = Offset(start.dx + 20, start.dy + 20);
-      canvas.drawLine(
-        start,
-        endOffset,
-        getPaint(transition.entry.foot, transition.entry.abbreviation),
-      );
+    endOffset = Offset(start.dx + 20, start.dy + 20);
+    canvas.drawLine(
+    start,
+    endOffset,
+    getPaint(transition.entry.foot, transition.entry.abbreviation),
+    );
     }
 
     return EndPoint(
-      offset: endOffset,
-      direction: travelDirection,
+    offset: endOffset,
+    direction: travelDirection,
     );
   }
 

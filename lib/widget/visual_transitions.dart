@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:unroutine/model/sequence_model.dart';
 
 class EndPoint {
@@ -44,6 +45,56 @@ EndPoint drawSpiral(Canvas canvas, Transition transition, Offset start,
     getPaint(transition.entry.foot, transition.entry.abbreviation),
   );
   canvas.restore();
+  Offset result = calculateOffsetWithDirection(
+    Offset(start.dx, start.dy + height),
+    travelDirection,
+  );
+  return EndPoint(
+    offset: Offset(
+      rotatedOffset.dx + (start.dx - result.dx),
+      rotatedOffset.dy +
+          height * cos(travelDirection) +
+          (start.dy + height * cos(travelDirection) - result.dy),
+    ),
+    direction: travelDirection - pi / 2,
+  );
+}
+
+Paint getDebugPaint() {
+  Paint debugPaint = Paint();
+  debugPaint.color = Colors.black;
+  debugPaint.strokeWidth = 1;
+  return debugPaint;
+}
+
+EndPoint drawStep(Canvas canvas, Transition transition, Offset start,
+    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+  canvas.save();
+  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
+
+  canvas.rotate(travelDirection);
+  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+  double width = 200;
+  double height = 200;
+  double spacer = 20;
+
+  Rect rect = Rect.fromCenter(
+    center: Offset(
+      start.dx,
+      start.dy + 1 / 2 * height + spacer,
+    ),
+    width: width,
+    height: height,
+  );
+  canvas.drawArc(
+    rect,
+    pi,
+    pi / 2,
+    false,
+    getPaint(transition.exit.foot, transition.exit.abbreviation),
+  );
+  canvas.restore();
+  // TODO: A lot of math
   Offset result = calculateOffsetWithDirection(
     Offset(start.dx, start.dy + height),
     travelDirection,
