@@ -33,30 +33,61 @@ class VisualDisplay extends StatelessWidget {
 }
 
 class SequencePainter extends CustomPainter {
-  SequencePainter({this.context, this.sequence});
+  SequencePainter({this.context, this.sequence}) {
+    _leftPaint = Paint();
+    _leftPaint.color = Colors.lightGreen;
+    _leftPaint.strokeWidth = 4;
+
+    // TODO: Need a better way to distinguish backward vs. forward
+    _leftBackPaint = Paint();
+    _leftBackPaint.color = Colors.green;
+    _leftBackPaint.strokeWidth = 3;
+
+    _rightPaint = Paint();
+    _rightPaint.color = Colors.orange;
+    _rightPaint.strokeWidth = 4;
+
+    _rightBackPaint = Paint();
+    _rightBackPaint.color = Colors.deepOrange;
+    _rightBackPaint.strokeWidth = 3;
+  }
 
   final BuildContext context;
   final SequenceModel sequence;
+  Paint _leftPaint;
+  Paint _leftBackPaint;
+  Paint _rightPaint;
+  Paint _rightBackPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint leftPaint = Paint();
-    leftPaint.color = Colors.green;
-    leftPaint.strokeWidth = 4;
-
-    Paint rightPaint = Paint();
-    rightPaint.color = Colors.orange;
-    rightPaint.strokeWidth = 4;
-
     double currentX = 60;
     double currentY = 60;
+
+    // Starting position
+    final firstTransition = sequence.transitions.first;
+    canvas.drawCircle(
+        Offset(currentX, currentY),
+        5,
+        getPaint(
+            firstTransition.entry.foot, firstTransition.entry.abbreviation));
+
     for (var transition in sequence.transitions) {
       Offset startOffset = Offset(currentX, currentY);
       currentX += 20;
       currentY += 20;
       Offset endOffset = Offset(currentX, currentY);
+
       canvas.drawLine(startOffset, endOffset,
-          transition.entry.foot == 'L' ? leftPaint : rightPaint);
+          getPaint(transition.entry.foot, transition.entry.abbreviation));
+    }
+  }
+
+  Paint getPaint(String foot, String edge) {
+    if (foot == 'L') {
+      return edge[0] == 'F' ? _leftPaint : _leftBackPaint;
+    } else {
+      return edge[0] == 'F' ? _rightPaint : _rightBackPaint;
     }
   }
 
