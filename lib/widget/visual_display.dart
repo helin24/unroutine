@@ -11,7 +11,7 @@ class VisualDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: SequencePainter(context: context),
+      painter: SequencePainter(context: context, sequence: sequence),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +24,7 @@ class VisualDisplay extends StatelessWidget {
                 color: Theme.of(context).textTheme.bodyText1.color,
               ),
             ),
-            Text(saved? 'Saved!' : ''),
+            Text(saved ? 'Saved!' : ''),
           ],
         ),
       ),
@@ -33,25 +33,31 @@ class VisualDisplay extends StatelessWidget {
 }
 
 class SequencePainter extends CustomPainter {
-  SequencePainter({this.context});
+  SequencePainter({this.context, this.sequence});
 
   final BuildContext context;
+  final SequenceModel sequence;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint();
-    paint.color = Theme.of(context).accentColor;
-    paint.strokeWidth = 4;
-    canvas.drawCircle(
-      Offset(20, 20),
-      40,
-      paint,
-    );
-    canvas.drawLine(
-      Offset(60, 60),
-      Offset(120, 480),
-      paint,
-    );
+    Paint leftPaint = Paint();
+    leftPaint.color = Colors.green;
+    leftPaint.strokeWidth = 4;
+
+    Paint rightPaint = Paint();
+    rightPaint.color = Colors.orange;
+    rightPaint.strokeWidth = 4;
+
+    double currentX = 60;
+    double currentY = 60;
+    for (var transition in sequence.transitions) {
+      Offset startOffset = Offset(currentX, currentY);
+      currentX += 20;
+      currentY += 20;
+      Offset endOffset = Offset(currentX, currentY);
+      canvas.drawLine(startOffset, endOffset,
+          transition.entry.foot == 'L' ? leftPaint : rightPaint);
+    }
   }
 
   @override
