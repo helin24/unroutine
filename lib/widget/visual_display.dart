@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,11 @@ class SequencePainter extends CustomPainter {
     _rightBackPaint = Paint();
     _rightBackPaint.color = Colors.deepOrange;
     _rightBackPaint.strokeWidth = 3;
+    _rightBackPaint.style = PaintingStyle.stroke;
+
+    _debugPaint = Paint();
+    _debugPaint.color = Colors.black;
+    _debugPaint.strokeWidth = 1;
   }
 
   final BuildContext context;
@@ -58,29 +65,62 @@ class SequencePainter extends CustomPainter {
   Paint _leftBackPaint;
   Paint _rightPaint;
   Paint _rightBackPaint;
+  Paint _debugPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
-    double currentX = 60;
-    double currentY = 60;
+    Offset current = Offset(60, 60);
 
     // Starting position
     final firstTransition = sequence.transitions.first;
     canvas.drawCircle(
-        Offset(currentX, currentY),
-        5,
-        getPaint(
-            firstTransition.entry.foot, firstTransition.entry.abbreviation));
+      current,
+      5,
+      getPaint(
+        firstTransition.entry.foot,
+        firstTransition.entry.abbreviation,
+      ),
+    );
 
     for (var transition in sequence.transitions) {
-      Offset startOffset = Offset(currentX, currentY);
-      currentX += 20;
-      currentY += 20;
-      Offset endOffset = Offset(currentX, currentY);
-
-      canvas.drawLine(startOffset, endOffset,
-          getPaint(transition.entry.foot, transition.entry.abbreviation));
+      current = drawTransition(canvas, transition, current);
     }
+  }
+
+  Offset drawTransition(Canvas canvas, Transition transition, Offset start) {
+    Offset endOffset;
+    if (transition.move.abbreviation == 'Spiral') {
+      double width = 100;
+      double height = 200;
+      Rect rect = Rect.fromCenter(
+        center: Offset(
+          start.dx,
+          start.dy + 1 / 2 * height,
+        ),
+        width: width,
+        height: height,
+      );
+      canvas.drawArc(
+        rect,
+        pi / 2,
+        pi,
+        false,
+        getPaint(transition.entry.foot, transition.entry.abbreviation),
+      );
+      endOffset = Offset(
+        start.dx,
+        start.dy + height,
+      );
+    } else {
+      endOffset = Offset(start.dx + 20, start.dy + 20);
+      canvas.drawLine(
+        start,
+        endOffset,
+        getPaint(transition.entry.foot, transition.entry.abbreviation),
+      );
+    }
+
+    return endOffset;
   }
 
   Paint getPaint(String foot, String edge) {
