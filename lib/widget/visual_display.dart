@@ -34,6 +34,13 @@ class VisualDisplay extends StatelessWidget {
   }
 }
 
+class EndPoint {
+  EndPoint({this.offset, this.direction});
+
+  final Offset offset;
+  final double direction;
+}
+
 class SequencePainter extends CustomPainter {
   SequencePainter({this.context, this.sequence}) {
     _leftPaint = Paint();
@@ -69,12 +76,13 @@ class SequencePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Offset current = Offset(60, 80);
+    Offset offset = Offset(60, 80);
+    double direction = 0;
 
     // Starting position
     final firstTransition = sequence.transitions.first;
     canvas.drawCircle(
-      current,
+      offset,
       5,
       getPaint(
         firstTransition.entry.foot,
@@ -83,7 +91,9 @@ class SequencePainter extends CustomPainter {
     );
 
     for (var transition in sequence.transitions) {
-      current = drawTransition(canvas, transition, current, -0.1);
+      EndPoint result = drawTransition(canvas, transition, offset, 0);
+      offset = result.offset;
+      direction = result.direction;
     }
   }
 
@@ -97,7 +107,7 @@ class SequencePainter extends CustomPainter {
   }
 
   // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
-  Offset drawTransition(Canvas canvas, Transition transition, Offset start,
+  EndPoint drawTransition(Canvas canvas, Transition transition, Offset start,
       double travelDirection) {
     Offset endOffset;
     if (transition.move.abbreviation == 'Spiral') {
@@ -130,12 +140,14 @@ class SequencePainter extends CustomPainter {
         Offset(start.dx, start.dy + height),
         travelDirection,
       );
-
-      return Offset(
-        rotatedOffset.dx + (start.dx - result.dx),
-        rotatedOffset.dy +
-            height * cos(travelDirection) +
-            (start.dy + height * cos(travelDirection) - result.dy),
+      return EndPoint(
+        offset: Offset(
+          rotatedOffset.dx + (start.dx - result.dx),
+          rotatedOffset.dy +
+              height * cos(travelDirection) +
+              (start.dy + height * cos(travelDirection) - result.dy),
+        ),
+        direction: travelDirection,
       );
     } else {
       canvas.drawCircle(
@@ -155,7 +167,10 @@ class SequencePainter extends CustomPainter {
       );
     }
 
-    return endOffset;
+    return EndPoint(
+      offset: endOffset,
+      direction: travelDirection,
+    );
   }
 
   Paint getPaint(String foot, String edge) {
