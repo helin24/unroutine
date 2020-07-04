@@ -18,14 +18,14 @@ class VisualDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Example sequence',
-              style: TextStyle(
-                fontSize: 40.0,
-                fontWeight: FontWeight.w900,
-                color: Theme.of(context).textTheme.bodyText1.color,
-              ),
-            ),
+//            Text(
+//              'Example sequence',
+//              style: TextStyle(
+//                fontSize: 40.0,
+//                fontWeight: FontWeight.w900,
+//                color: Theme.of(context).textTheme.bodyText1.color,
+//              ),
+//            ),
             Text(saved ? 'Saved!' : ''),
           ],
         ),
@@ -69,7 +69,7 @@ class SequencePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Offset current = Offset(60, 60);
+    Offset current = Offset(60, 80);
 
     // Starting position
     final firstTransition = sequence.transitions.first;
@@ -83,13 +83,31 @@ class SequencePainter extends CustomPainter {
     );
 
     for (var transition in sequence.transitions) {
-      current = drawTransition(canvas, transition, current);
+      current = drawTransition(canvas, transition, current, -0.1);
     }
   }
 
-  Offset drawTransition(Canvas canvas, Transition transition, Offset start) {
+  Offset calculateOffsetWithDirection(Offset start, double direction) {
+    double hypotenuse = sqrt(pow(start.dx, 2) + pow(start.dy, 2));
+    double initialAngle = atan(start.dx / start.dy);
+    double finalAngle = initialAngle + direction;
+    double endX = sin(finalAngle) * hypotenuse;
+    double endY = cos(finalAngle) * hypotenuse;
+    return Offset(endX, endY);
+  }
+
+  // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
+  Offset drawTransition(Canvas canvas, Transition transition, Offset start,
+      double travelDirection) {
     Offset endOffset;
     if (transition.move.abbreviation == 'Spiral') {
+      canvas.save();
+      Offset rotatedOffset =
+          calculateOffsetWithDirection(start, travelDirection);
+
+      canvas.rotate(travelDirection);
+      canvas.translate(
+          rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
       double width = 100;
       double height = 200;
       Rect rect = Rect.fromCenter(
@@ -107,11 +125,28 @@ class SequencePainter extends CustomPainter {
         false,
         getPaint(transition.entry.foot, transition.entry.abbreviation),
       );
-      endOffset = Offset(
-        start.dx,
-        start.dy + height,
+      canvas.restore();
+      Offset result = calculateOffsetWithDirection(
+        Offset(start.dx, start.dy + height),
+        travelDirection,
+      );
+
+      return Offset(
+        rotatedOffset.dx + (start.dx - result.dx),
+        rotatedOffset.dy +
+            height * cos(travelDirection) +
+            (start.dy + height * cos(travelDirection) - result.dy),
       );
     } else {
+      canvas.drawCircle(
+        start,
+        3,
+        getPaint(
+          transition.entry.foot,
+          transition.entry.abbreviation,
+        ),
+      );
+
       endOffset = Offset(start.dx + 20, start.dy + 20);
       canvas.drawLine(
         start,
