@@ -93,32 +93,33 @@ class SequencePainter extends CustomPainter {
   // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
   EndPoint drawTransition(Canvas canvas, Transition transition, Offset start,
       double travelDirection) {
+    print('drawing transition starting at (${start.dx}, ${start.dy})');
     Offset endOffset;
     if (transition.move.abbreviation == 'Spiral') {
       return drawSpiral(canvas, transition, start, travelDirection, getPaint);
     } else if (transition.move.abbreviation == 'Step') {
       return drawStep(canvas, transition, start, travelDirection, getPaint);
     } else {
-    canvas.drawCircle(
-    start,
-    3,
-    getPaint(
-    transition.entry.foot,
-    transition.entry.abbreviation,
-    ),
-    );
+      canvas.drawCircle(
+        start,
+        3,
+        getPaint(
+          transition.entry.foot,
+          transition.entry.abbreviation,
+        ),
+      );
 
-    endOffset = Offset(start.dx + 20, start.dy + 20);
-    canvas.drawLine(
-    start,
-    endOffset,
-    getPaint(transition.entry.foot, transition.entry.abbreviation),
-    );
+      endOffset = Offset(start.dx + 20, start.dy + 20);
+      canvas.drawLine(
+        start,
+        endOffset,
+        getPaint(transition.entry.foot, transition.entry.abbreviation),
+      );
     }
 
     return EndPoint(
-    offset: endOffset,
-    direction: travelDirection,
+      offset: endOffset,
+      direction: travelDirection,
     );
   }
 

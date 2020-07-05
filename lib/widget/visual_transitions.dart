@@ -17,6 +17,8 @@ Offset calculateOffsetWithDirection(Offset start, double direction) {
   double finalAngle = initialAngle + direction;
   double endX = sin(finalAngle) * hypotenuse;
   double endY = cos(finalAngle) * hypotenuse;
+//  print('${start.dx} -> ${endX}');
+//  print('${start.dy} -> ${endY}');
   return Offset(endX, endY);
 }
 
@@ -56,7 +58,7 @@ EndPoint drawSpiral(Canvas canvas, Transition transition, Offset start,
           height * cos(travelDirection) +
           (start.dy + height * cos(travelDirection) - result.dy),
     ),
-    direction: travelDirection - pi / 2,
+    direction: travelDirection - pi / 2 + .1,
   );
 }
 
@@ -95,16 +97,17 @@ EndPoint drawStep(Canvas canvas, Transition transition, Offset start,
   );
   canvas.restore();
   // TODO: A lot of math
+  final changeY = spacer + height / 2;
   Offset result = calculateOffsetWithDirection(
-    Offset(start.dx, start.dy + height),
+    Offset(start.dx + width / 2, start.dy + changeY),
     travelDirection,
   );
   return EndPoint(
     offset: Offset(
       rotatedOffset.dx + (start.dx - result.dx),
       rotatedOffset.dy +
-          height * cos(travelDirection) +
-          (start.dy + height * cos(travelDirection) - result.dy),
+          changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
+          (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
     ),
     direction: travelDirection,
   );
