@@ -99,6 +99,8 @@ class SequencePainter extends CustomPainter {
       return drawSpiral(canvas, transition, start, travelDirection, getPaint);
     } else if (transition.move.abbreviation == 'Step') {
       return drawStep(canvas, transition, start, travelDirection, getPaint);
+    } else if (transition.move.abbreviation == 'PwPull') {
+      return drawPowerPull(canvas, transition, start, travelDirection, getPaint);
     } else {
       canvas.drawCircle(
         start,
