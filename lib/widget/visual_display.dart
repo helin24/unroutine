@@ -89,6 +89,8 @@ class SequencePainter extends CustomPainter {
       EndPoint result = drawTransition(canvas, transition, offset, direction);
       offset = result.offset;
       direction = result.direction;
+
+      canvas.drawCircle(offset, 3, getDebugPaint());
     }
   }
 
@@ -106,6 +108,9 @@ class SequencePainter extends CustomPainter {
           canvas, transition, start, travelDirection, getPaint);
     } else if (transition.move.abbreviation == '3Turn') {
       return drawThreeTurn(
+          canvas, transition, start, travelDirection, getPaint);
+    } else if (transition.move.abbreviation == 'Loop') {
+      return drawLoop(
           canvas, transition, start, travelDirection, getPaint);
     } else {
       canvas.drawCircle(

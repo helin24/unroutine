@@ -198,3 +198,47 @@ EndPoint drawThreeTurn(Canvas canvas, Transition transition, Offset start,
   );
 }
 
+EndPoint drawLoop(Canvas canvas, Transition transition, Offset start,
+    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+  canvas.save();
+  travelDirection = travelDirection + pi / 2 - 0.4;
+  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
+
+  canvas.rotate(travelDirection);
+  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+  double width = 100;
+  double height = 100;
+  double spacer = 30;
+
+  Rect rect = Rect.fromCenter(
+    center: Offset(
+      start.dx - 1 / 2 * width,
+      start.dy + spacer,
+    ),
+    width: width,
+    height: height,
+  );
+  canvas.drawArc(
+    rect,
+    0,
+    pi / 2,
+    false,
+    getPaint(transition.exit.foot, transition.exit.abbreviation),
+  );
+  canvas.restore();
+
+  final changeY = height / 2 + spacer;
+  Offset result = calculateOffsetWithDirection(
+    Offset(start.dx + width / 2, start.dy + changeY),
+    travelDirection,
+  );
+  return EndPoint(
+    offset: Offset(
+      rotatedOffset.dx + (start.dx - result.dx),
+      rotatedOffset.dy +
+          changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
+          (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
+    ),
+    direction: travelDirection,
+  );
+}
