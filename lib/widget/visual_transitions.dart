@@ -112,6 +112,46 @@ EndPoint drawStep(Canvas canvas, Transition transition, Offset start,
   );
 }
 
+EndPoint drawContinueStep(Canvas canvas, Transition transition, Offset start,
+    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+  canvas.save();
+
+  travelDirection = travelDirection - 0.4;
+  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
+  canvas.rotate(travelDirection);
+  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+  double width = 100;
+  double height = 100;
+  double spacer = 5;
+
+  Rect rect = Rect.fromCenter(
+    center: Offset(
+      start.dx - width / 2 + spacer,
+      start.dy,
+    ),
+    width: width,
+    height: height,
+  );
+//  canvas.drawRect(rect, getDebugPaint());
+  canvas.drawArc(
+    rect,
+    0,
+    pi / 2,
+    false,
+    getPaint(transition.exit.foot, transition.exit.abbreviation),
+  );
+  canvas.restore();
+  final changeY = height / 2;
+  final changeX = - width / 2 + spacer;
+  return EndPoint(
+    offset: Offset(
+      start.dx + changeX * sin(travelDirection) - changeY * cos(travelDirection),
+      start.dy + changeY * cos(travelDirection) + changeX * sin(travelDirection),
+    ),
+    direction: travelDirection,
+  );
+}
+
 EndPoint drawPowerPull(Canvas canvas, Transition transition, Offset start,
     double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
   canvas.save();
@@ -239,6 +279,6 @@ EndPoint drawLoop(Canvas canvas, Transition transition, Offset start,
           changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
           (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
     ),
-    direction: travelDirection,
+    direction: travelDirection + pi / 2,
   );
 }
