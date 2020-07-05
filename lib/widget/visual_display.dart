@@ -44,10 +44,12 @@ class SequencePainter extends CustomPainter {
     _leftBackPaint = Paint();
     _leftBackPaint.color = Colors.green;
     _leftBackPaint.strokeWidth = 3;
+    _leftBackPaint.style = PaintingStyle.stroke;
 
     _rightPaint = Paint();
     _rightPaint.color = Colors.orange;
     _rightPaint.strokeWidth = 4;
+    _rightPaint.style = PaintingStyle.stroke;
 
     _rightBackPaint = Paint();
     _rightBackPaint.color = Colors.deepOrange;
@@ -100,7 +102,11 @@ class SequencePainter extends CustomPainter {
     } else if (transition.move.abbreviation == 'Step') {
       return drawStep(canvas, transition, start, travelDirection, getPaint);
     } else if (transition.move.abbreviation == 'PwPull') {
-      return drawPowerPull(canvas, transition, start, travelDirection, getPaint);
+      return drawPowerPull(
+          canvas, transition, start, travelDirection, getPaint);
+    } else if (transition.move.abbreviation == '3Turn') {
+      return drawThreeTurn(
+          canvas, transition, start, travelDirection, getPaint);
     } else {
       canvas.drawCircle(
         start,
