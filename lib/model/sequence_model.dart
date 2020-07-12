@@ -5,8 +5,15 @@ class SequenceModel {
   final List<Transition> transitions;
   final String name;
   final DateTime savedOn;
+  final String audioUrl;
 
-  SequenceModel({this.startEdge, this.transitions, this.name, this.savedOn});
+  SequenceModel({
+    this.startEdge,
+    this.transitions,
+    this.name,
+    this.savedOn,
+    this.audioUrl,
+  });
 
   factory SequenceModel.fromJson(Map<String, dynamic> json) {
     return SequenceModel(
@@ -16,8 +23,10 @@ class SequenceModel {
           .map((t) => Transition.fromJson(t))
           .toList(),
       savedOn: json['savedOn'] != null
-          ? DateTime.fromMillisecondsSinceEpoch((json['savedOn'] * 1000).round())
+          ? DateTime.fromMillisecondsSinceEpoch(
+              (json['savedOn'] * 1000).round())
           : null,
+      audioUrl: json['audio'] != null ? json['audio'] : null,
     );
   }
 
@@ -28,6 +37,7 @@ class SequenceModel {
       'startEdge': jsonEncode(startEdge),
       'transitions': jsonEncode(transitions),
       'savedOn': now.millisecondsSinceEpoch / 1000,
+      'audioUrl': audioUrl,
     };
   }
 }
