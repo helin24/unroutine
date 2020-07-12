@@ -12,7 +12,7 @@ class UserSettings extends StatefulWidget {
 class _UserSettingsState extends State<UserSettings> {
   bool clockwise = false;
   SharedPreferences preferences;
-  String level = levels[0];
+  String level = levels[0].abbreviation;
 
   @override
   initState() {
@@ -67,9 +67,9 @@ class _UserSettingsState extends State<UserSettings> {
                   onChanged: onLevelChanged,
                   items: levels
                       .map(
-                        (String level) => DropdownMenuItem<String>(
-                          value: level,
-                          child: Text(level),
+                        (Level level) => DropdownMenuItem<String>(
+                          value: level.abbreviation,
+                          child: Text(level.name),
                         ),
                       )
                       .toList(),
