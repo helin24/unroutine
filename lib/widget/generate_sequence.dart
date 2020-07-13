@@ -21,12 +21,17 @@ class GenerateSequence extends StatefulWidget {
   _GenerateSequenceState createState() => _GenerateSequenceState();
 }
 
-Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
+Future<SequenceModel> fetchSequence(
+    int steps, bool clockwise, bool stepSequence, String level) async {
   final url = apiUrl +
       '?steps=' +
       steps.toString() +
       '&clockwise=' +
-      (clockwise ? 'on' : 'off');
+      (clockwise ? 'on' : 'off') +
+      '&stepSequence=' +
+      (stepSequence ? 'on' : 'off') +
+      '&level=' +
+      level;
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
@@ -38,7 +43,9 @@ Future<SequenceModel> fetchSequence(int steps, bool clockwise) async {
 
 class _GenerateSequenceState extends State<GenerateSequence> {
   bool clockwise = false;
-  int count = 5;
+  bool stepSequence = true;
+  String level = levels[0].abbreviation;
+  int count = 6;
   bool pressed = false;
   SequenceModel sequence;
 
@@ -52,6 +59,11 @@ class _GenerateSequenceState extends State<GenerateSequence> {
           clockwise = clockwiseValue;
         });
       }
+      if (preferences.containsKey(LEVEL_PREFERENCE)) {
+        setState(() {
+          level = preferences.getString(LEVEL_PREFERENCE);
+        });
+      }
     });
   }
 
@@ -59,7 +71,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
     setState(() {
       pressed = true;
     });
-    fetchSequence(count, clockwise).then((result) {
+    fetchSequence(count, clockwise, stepSequence, level).then((result) {
       setState(() {
         pressed = false;
         sequence = result;
@@ -112,6 +124,16 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Step sequence?'),
+                Checkbox(
+                  value: stepSequence,
+                  onChanged: onStepSequenceChanged,
+                ),
+              ],
+            ),
             pressed
                 ? CircularProgressIndicator()
                 : FlatButton(
@@ -129,5 +151,11 @@ class _GenerateSequenceState extends State<GenerateSequence> {
             )
           : null,
     );
+  }
+
+  onStepSequenceChanged(bool newValue) {
+    setState(() {
+      stepSequence = newValue;
+    });
   }
 }

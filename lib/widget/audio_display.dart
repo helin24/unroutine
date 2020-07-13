@@ -13,10 +13,14 @@ class AudioDisplay extends StatefulWidget {
   final bool saved;
 
   @override
-  _AudioDisplayState createState() => _AudioDisplayState();
+  _AudioDisplayState createState() => _AudioDisplayState(sequence: sequence);
 }
 
 class _AudioDisplayState extends State<AudioDisplay> {
+  final SequenceModel sequence;
+
+  _AudioDisplayState({this.sequence});
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +77,9 @@ class _AudioDisplayState extends State<AudioDisplay> {
   }
 
   Future<void> _play() async {
-    await audioPlayer.play('https://www2.cs.uic.edu/~i101/SoundFiles/CantinaBand3.wav');
+    if (sequence.audioUrl != null) {
+      await audioPlayer.play(sequence.audioUrl);
+    }
+    // TODO: Add error condition
   }
 }
