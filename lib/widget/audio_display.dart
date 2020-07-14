@@ -24,7 +24,7 @@ class _AudioDisplayState extends State<AudioDisplay> {
   @override
   void initState() {
     super.initState();
-    _setUpSpeech();
+//    _setUpSpeech();
   }
 
   final AudioPlayer audioPlayer = AudioPlayer();
