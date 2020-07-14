@@ -51,12 +51,3 @@ class _ManageDisplayState extends State<ManageDisplay> {
     );
   }
 }
-
-Text getTransition(Transition transition) {
-  return Text(
-    transition.move.name +
-        ' -> ' +
-        transition.exit.foot +
-        transition.exit.abbreviation,
-  );
-}

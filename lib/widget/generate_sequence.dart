@@ -22,7 +22,11 @@ class GenerateSequence extends StatefulWidget {
 }
 
 Future<SequenceModel> fetchSequence(
-    int steps, bool clockwise, bool stepSequence, String level) async {
+  int steps,
+  bool clockwise,
+  bool stepSequence,
+  String level,
+) async {
   final url = apiUrl +
       '?steps=' +
       steps.toString() +
