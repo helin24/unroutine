@@ -6,6 +6,7 @@ class SequenceModel {
   final String name;
   final DateTime savedOn;
   final String audioUrl;
+  final int id;
 
   SequenceModel({
     this.startEdge,
@@ -13,6 +14,7 @@ class SequenceModel {
     this.name,
     this.savedOn,
     this.audioUrl,
+    this.id,
   });
 
   factory SequenceModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class SequenceModel {
               (json['savedOn'] * 1000).round())
           : null,
       audioUrl: json['audio'] != null ? json['audio'] : null,
+      id: json['id'] != null ? json['id'] : null,
     );
   }
 
