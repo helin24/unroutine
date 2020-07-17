@@ -97,6 +97,8 @@ class SequencePainter extends CustomPainter {
       case 'Step': {
         if (transition.entry.abbreviation[0] == transition.exit.abbreviation[0] &&
             transition.entry.abbreviation[1] != transition.exit.abbreviation[1]) {
+          // This is where direction (backwards/forwards) doesn't change, but
+          // the edge changes. Essentially it is moving on the same arc.
           return drawContinueStep(
               canvas, transition, start, travelDirection, getPaint);
         }

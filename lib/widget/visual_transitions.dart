@@ -23,8 +23,13 @@ Offset calculateOffsetWithDirection(Offset start, double direction) {
   return Offset(endX, endY);
 }
 
-EndPoint drawSpiral(Canvas canvas, Transition transition, Offset start,
-    double travelDirection, Function getPaint) {
+EndPoint drawSpiral(
+  Canvas canvas,
+  Transition transition,
+  Offset start,
+  double travelDirection,
+  Function getPaint,
+) {
   canvas.save();
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
   canvas.rotate(travelDirection);
@@ -65,13 +70,18 @@ Paint getDebugPaint() {
   return debugPaint;
 }
 
-EndPoint drawStep(Canvas canvas, Transition transition, Offset start,
-    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+EndPoint drawStep(
+  Canvas canvas,
+  Transition transition,
+  Offset start,
+  double travelDirection,
+  Paint Function(String foot, String abbreviation) getPaint,
+) {
   canvas.save();
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-
   canvas.rotate(travelDirection);
   canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+
   double width = 100;
   double height = 100;
   double spacer = 20;
@@ -93,23 +103,26 @@ EndPoint drawStep(Canvas canvas, Transition transition, Offset start,
   );
   canvas.restore();
   final changeY = spacer + height / 2;
-  Offset result = calculateOffsetWithDirection(
-    Offset(start.dx + width / 2, start.dy + changeY),
-    travelDirection,
-  );
+
   return EndPoint(
     offset: Offset(
-      rotatedOffset.dx + (start.dx - result.dx),
-      rotatedOffset.dy +
-          changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
-          (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
+      start.dx -
+          changeY * sin(travelDirection) +
+          width / 2 * cos(travelDirection),
+      start.dy +
+          changeY * cos(travelDirection) -
+          width / 2 * sin(travelDirection),
     ),
     direction: travelDirection,
   );
 }
 
-EndPoint drawContinueStep(Canvas canvas, Transition transition, Offset start,
-    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+EndPoint drawContinueStep(
+    Canvas canvas,
+    Transition transition,
+    Offset start,
+    double travelDirection,
+    Paint Function(String foot, String abbreviation) getPaint) {
   canvas.save();
 
   travelDirection = travelDirection - 0.4;
@@ -138,18 +151,26 @@ EndPoint drawContinueStep(Canvas canvas, Transition transition, Offset start,
   );
   canvas.restore();
   final changeY = height / 2;
-  final changeX = - width / 2 + spacer;
+  final changeX = -width / 2 + spacer;
   return EndPoint(
     offset: Offset(
-      start.dx + changeX * sin(travelDirection) - changeY * cos(travelDirection),
-      start.dy + changeY * cos(travelDirection) + changeX * sin(travelDirection),
+      start.dx +
+          changeX * sin(travelDirection) -
+          changeY * cos(travelDirection),
+      start.dy +
+          changeY * cos(travelDirection) +
+          changeX * sin(travelDirection),
     ),
     direction: travelDirection,
   );
 }
 
-EndPoint drawPowerPull(Canvas canvas, Transition transition, Offset start,
-    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+EndPoint drawPowerPull(
+    Canvas canvas,
+    Transition transition,
+    Offset start,
+    double travelDirection,
+    Paint Function(String foot, String abbreviation) getPaint) {
   canvas.save();
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
 
@@ -184,15 +205,23 @@ EndPoint drawPowerPull(Canvas canvas, Transition transition, Offset start,
     offset: Offset(
       rotatedOffset.dx + (start.dx - result.dx),
       rotatedOffset.dy +
-          changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
-          (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
+          changeY * cos(travelDirection) -
+          width / 2 * sin(travelDirection) +
+          (start.dy +
+              changeY * cos(travelDirection) -
+              width / 2 * sin(travelDirection) -
+              result.dy),
     ),
     direction: travelDirection,
   );
 }
 
-EndPoint drawThreeTurn(Canvas canvas, Transition transition, Offset start,
-    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+EndPoint drawThreeTurn(
+    Canvas canvas,
+    Transition transition,
+    Offset start,
+    double travelDirection,
+    Paint Function(String foot, String abbreviation) getPaint) {
   canvas.save();
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
 
@@ -227,15 +256,23 @@ EndPoint drawThreeTurn(Canvas canvas, Transition transition, Offset start,
     offset: Offset(
       rotatedOffset.dx + (start.dx - result.dx),
       rotatedOffset.dy +
-          changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
-          (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
+          changeY * cos(travelDirection) -
+          width / 2 * sin(travelDirection) +
+          (start.dy +
+              changeY * cos(travelDirection) -
+              width / 2 * sin(travelDirection) -
+              result.dy),
     ),
     direction: travelDirection,
   );
 }
 
-EndPoint drawLoop(Canvas canvas, Transition transition, Offset start,
-    double travelDirection, Paint Function(String foot, String abbreviation) getPaint) {
+EndPoint drawLoop(
+    Canvas canvas,
+    Transition transition,
+    Offset start,
+    double travelDirection,
+    Paint Function(String foot, String abbreviation) getPaint) {
   canvas.save();
   travelDirection = travelDirection + pi / 2 - 0.4;
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
@@ -272,8 +309,12 @@ EndPoint drawLoop(Canvas canvas, Transition transition, Offset start,
     offset: Offset(
       rotatedOffset.dx + (start.dx - result.dx),
       rotatedOffset.dy +
-          changeY * cos(travelDirection) - width / 2 * sin(travelDirection) +
-          (start.dy + changeY * cos(travelDirection) - width / 2 * sin(travelDirection) - result.dy),
+          changeY * cos(travelDirection) -
+          width / 2 * sin(travelDirection) +
+          (start.dy +
+              changeY * cos(travelDirection) -
+              width / 2 * sin(travelDirection) -
+              result.dy),
     ),
     direction: travelDirection + pi / 2,
   );
