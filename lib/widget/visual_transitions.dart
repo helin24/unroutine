@@ -11,6 +11,7 @@ class EndPoint {
   final double direction;
 }
 
+// This is how much to move a point on the new canvas.
 Offset calculateOffsetWithDirection(Offset start, double direction) {
   double hypotenuse = sqrt(pow(start.dx, 2) + pow(start.dy, 2));
   double initialAngle = atan(start.dx / start.dy);
@@ -26,9 +27,9 @@ EndPoint drawSpiral(Canvas canvas, Transition transition, Offset start,
     double travelDirection, Function getPaint) {
   canvas.save();
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-
   canvas.rotate(travelDirection);
   canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+
   double width = 100;
   double height = 200;
   Rect rect = Rect.fromCenter(
@@ -47,16 +48,11 @@ EndPoint drawSpiral(Canvas canvas, Transition transition, Offset start,
     getPaint(transition.entry.foot, transition.entry.abbreviation),
   );
   canvas.restore();
-  Offset result = calculateOffsetWithDirection(
-    Offset(start.dx, start.dy + height),
-    travelDirection,
-  );
+
   return EndPoint(
     offset: Offset(
-      rotatedOffset.dx + (start.dx - result.dx),
-      rotatedOffset.dy +
-          height * cos(travelDirection) +
-          (start.dy + height * cos(travelDirection) - result.dy),
+      start.dx - height * sin(travelDirection),
+      start.dy + height * cos(travelDirection),
     ),
     direction: travelDirection - pi / 2 + .1,
   );

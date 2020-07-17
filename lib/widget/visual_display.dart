@@ -64,7 +64,7 @@ class SequencePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Offset offset = Offset(100, 40);
-    double direction = 0;
+    double direction = -0.2;
 
     // Starting position
     final firstTransition = sequence.transitions.first;
