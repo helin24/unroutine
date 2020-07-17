@@ -357,52 +357,62 @@ class VisualThreeTurn extends VisualTransition {
   }
 }
 
-
-EndPoint drawLoop(
-  Canvas canvas,
-  Transition transition,
-  Offset start,
-  double travelDirection,
-  Paint Function(String foot, String abbreviation) getPaint,
-) {
-  canvas.save();
-  travelDirection = travelDirection + pi / 2 - 0.4;
-  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-  canvas.rotate(travelDirection);
-  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
-
-  double width = 100;
-  double height = 100;
-  double spacer = 30;
-
-  Rect rect = Rect.fromCenter(
-    center: Offset(
-      start.dx - 1 / 2 * width,
-      start.dy + spacer,
-    ),
-    width: width,
-    height: height,
+class VisualLoop extends VisualTransition {
+  VisualLoop({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+    canvas: canvas,
+    transition: transition,
+    start: start,
+    travelDirection: travelDirection,
+    getPaint: getPaint,
+    ratio: ratio,
   );
-  canvas.drawArc(
-    rect,
-    0,
-    pi / 2,
-    false,
-    getPaint(transition.exit.foot, transition.exit.abbreviation),
-  );
-  canvas.restore();
 
-  final changeY = height / 2 + spacer;
-  final changeX = width / 2;
-  return EndPoint(
-    offset: Offset(
-      start.dx -
-          changeY * sin(travelDirection) -
-          changeX * cos(travelDirection),
-      start.dy +
-          changeY * cos(travelDirection) -
-          changeX * sin(travelDirection),
-    ),
-    direction: travelDirection + pi / 2,
-  );
+  @override
+  final double directionOffset = pi / 2 - 0.4;
+  final double width = 100;
+  final double height = 100;
+  final double spacer = 30;
+
+  @override
+  void draw() {
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx - 1 / 2 * width,
+        start.dy + spacer,
+      ),
+      width: width,
+      height: height,
+    );
+    canvas.drawArc(
+      rect,
+      0,
+      pi / 2,
+      false,
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+  }
+
+  @override
+  endPoint() {
+    final changeY = height / 2 + spacer;
+    final changeX = width / 2;
+    return EndPoint(
+      offset: Offset(
+        start.dx -
+            changeY * sin(travelDirection + directionOffset) -
+            changeX * cos(travelDirection + directionOffset),
+        start.dy +
+            changeY * cos(travelDirection + directionOffset) -
+            changeX * sin(travelDirection + directionOffset),
+      ),
+      direction: travelDirection + directionOffset + pi / 2,
+    );
+  }
 }
