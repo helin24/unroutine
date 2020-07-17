@@ -159,52 +159,70 @@ EndPoint drawStep(
   );
 }
 
-EndPoint drawContinueStep(
-  Canvas canvas,
-  Transition transition,
-  Offset start,
-  double travelDirection,
-  Paint Function(String foot, String abbreviation) getPaint,
-) {
-  canvas.save();
-  travelDirection = travelDirection - 0.4;
-  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-  canvas.rotate(travelDirection);
-  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+class VisualContinueStep extends VisualTransition {
+  VisualContinueStep({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+    canvas: canvas,
+    transition: transition,
+    start: start,
+    travelDirection: travelDirection,
+    getPaint: getPaint,
+    ratio: ratio,
+  );
 
-  double width = 100;
-  double height = 100;
-  double spacer = 5;
+  final double width = 100;
+  final double height = 100;
+  final double spacer = 5;
+  final double directionOffset = - 0.4;
 
-  Rect rect = Rect.fromCenter(
-    center: Offset(
-      start.dx - width / 2 + spacer,
-      start.dy,
-    ),
-    width: width,
-    height: height,
-  );
-  canvas.drawArc(
-    rect,
-    0,
-    pi / 2,
-    false,
-    getPaint(transition.exit.foot, transition.exit.abbreviation),
-  );
-  canvas.restore();
-  final changeY = height / 2;
-  final changeX = -width / 2 + spacer;
-  return EndPoint(
-    offset: Offset(
-      start.dx +
-          changeX * sin(travelDirection) -
-          changeY * cos(travelDirection),
-      start.dy +
-          changeY * cos(travelDirection) +
-          changeX * sin(travelDirection),
-    ),
-    direction: travelDirection,
-  );
+  @override
+  void draw() {
+    canvas.save();
+    double newDirection = travelDirection + directionOffset;
+    Offset rotatedOffset = calculateOffsetWithDirection(start, newDirection);
+    canvas.rotate(newDirection);
+    canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx - width / 2 + spacer,
+        start.dy,
+      ),
+      width: width,
+      height: height,
+    );
+    canvas.drawArc(
+      rect,
+      0,
+      pi / 2,
+      false,
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+    canvas.restore();
+  }
+
+  @override
+  EndPoint endPoint() {
+    final changeY = height / 2;
+    final changeX = -width / 2 + spacer;
+    return EndPoint(
+      offset: Offset(
+        start.dx +
+            changeX * sin(travelDirection + directionOffset) -
+            changeY * cos(travelDirection + directionOffset),
+        start.dy +
+            changeY * cos(travelDirection + directionOffset) +
+            changeX * sin(travelDirection + directionOffset),
+      ),
+      direction: travelDirection + directionOffset,
+    );
+  }
 }
 
 EndPoint drawPowerPull(

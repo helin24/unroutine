@@ -112,8 +112,16 @@ class SequencePainter extends CustomPainter {
                   transition.exit.abbreviation[1]) {
             // This is where direction (backwards/forwards) doesn't change, but
             // the edge changes. Essentially it is moving on the same arc.
-            return drawContinueStep(
-                canvas, transition, start, travelDirection, getPaint);
+            VisualTransition element = VisualContinueStep(
+              canvas: canvas,
+              transition: transition,
+              start: start,
+              travelDirection: travelDirection,
+              getPaint: getPaint,
+              ratio: 1.0,
+            );
+            element.draw();
+            return element.endPoint();
           }
           return drawStep(canvas, transition, start, travelDirection, getPaint);
         }
