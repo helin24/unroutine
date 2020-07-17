@@ -149,8 +149,16 @@ class SequencePainter extends CustomPainter {
         }
       case '3Turn':
         {
-          return drawThreeTurn(
-              canvas, transition, start, travelDirection, getPaint);
+          VisualTransition element = VisualThreeTurn(
+            canvas: canvas,
+            transition: transition,
+            start: start,
+            travelDirection: travelDirection,
+            getPaint: getPaint,
+            ratio: 1.0,
+          );
+          element.shiftAndDraw();
+          return element.endPoint();
         }
       case 'Loop':
       // TODO: Add an 'x' to bunny hop to show toe.
