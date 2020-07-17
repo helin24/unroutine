@@ -17,14 +17,6 @@ class VisualDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-//            Text(
-//              'Example sequence',
-//              style: TextStyle(
-//                fontSize: 40.0,
-//                fontWeight: FontWeight.w900,
-//                color: Theme.of(context).textTheme.bodyText1.color,
-//              ),
-//            ),
             Text(saved ? 'Saved!' : ''),
           ],
         ),
@@ -37,23 +29,23 @@ class SequencePainter extends CustomPainter {
   SequencePainter({this.context, this.sequence}) {
     _leftPaint = Paint();
     _leftPaint.color = Colors.lightGreen;
-    _leftPaint.strokeWidth = 4;
+    _leftPaint.strokeWidth = 2;
     _leftPaint.style = PaintingStyle.stroke;
 
     // TODO: Need a better way to distinguish backward vs. forward
     _leftBackPaint = Paint();
     _leftBackPaint.color = Colors.green;
-    _leftBackPaint.strokeWidth = 3;
+    _leftBackPaint.strokeWidth = 4;
     _leftBackPaint.style = PaintingStyle.stroke;
 
     _rightPaint = Paint();
     _rightPaint.color = Colors.orange;
-    _rightPaint.strokeWidth = 4;
+    _rightPaint.strokeWidth = 2;
     _rightPaint.style = PaintingStyle.stroke;
 
     _rightBackPaint = Paint();
     _rightBackPaint.color = Colors.deepOrange;
-    _rightBackPaint.strokeWidth = 3;
+    _rightBackPaint.strokeWidth = 4;
     _rightBackPaint.style = PaintingStyle.stroke;
 
     _debugPaint = Paint();
@@ -72,7 +64,7 @@ class SequencePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Offset offset = Offset(100, 40);
-    double direction = 0;
+    double direction = -0.2;
 
     // Starting position
     final firstTransition = sequence.transitions.first;
@@ -97,7 +89,6 @@ class SequencePainter extends CustomPainter {
   // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
   EndPoint drawTransition(Canvas canvas, Transition transition, Offset start,
       double travelDirection) {
-    print('drawing transition starting at (${start.dx}, ${start.dy})');
     Offset endOffset;
     switch (transition.move.abbreviation) {
       case 'Spiral': {
@@ -106,6 +97,8 @@ class SequencePainter extends CustomPainter {
       case 'Step': {
         if (transition.entry.abbreviation[0] == transition.exit.abbreviation[0] &&
             transition.entry.abbreviation[1] != transition.exit.abbreviation[1]) {
+          // This is where direction (backwards/forwards) doesn't change, but
+          // the edge changes. Essentially it is moving on the same arc.
           return drawContinueStep(
               canvas, transition, start, travelDirection, getPaint);
         }
@@ -120,6 +113,7 @@ class SequencePainter extends CustomPainter {
             canvas, transition, start, travelDirection, getPaint);
       }
       case 'Loop':
+      // TODO: Add an 'x' to bunny hop to show toe.
       case 'Bunny Hop': {
         return drawLoop(canvas, transition, start, travelDirection, getPaint);
       }
