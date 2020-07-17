@@ -71,14 +71,23 @@ class SequencePainter extends CustomPainter {
     canvas.drawCircle(
       offset,
       5,
-      getPaint(
+      _getPaint(
         firstTransition.entry.foot,
         firstTransition.entry.abbreviation,
       ),
     );
 
     for (var transition in sequence.transitions) {
-      EndPoint result = drawTransition(canvas, transition, offset, direction);
+      VisualTransition element =
+          _getVisualTransition(canvas, transition, offset, direction);
+      EndPoint result;
+      if (element == null) {
+        result = _drawDefault(canvas, transition, offset, direction);
+      } else {
+        element.shiftAndDraw();
+        result = element.endPoint();
+      }
+
       offset = result.offset;
       direction = result.direction;
 
@@ -86,23 +95,51 @@ class SequencePainter extends CustomPainter {
     }
   }
 
+  EndPoint _drawDefault(
+    Canvas canvas,
+    Transition transition,
+    Offset offset,
+    double direction,
+  ) {
+    canvas.drawCircle(
+      offset,
+      3,
+      _getPaint(
+        transition.entry.foot,
+        transition.entry.abbreviation,
+      ),
+    );
+
+    Offset endOffset = Offset(offset.dx + 20, offset.dy + 20);
+    canvas.drawLine(
+      offset,
+      endOffset,
+      _getPaint(transition.entry.foot, transition.entry.abbreviation),
+    );
+    return EndPoint(
+      offset: endOffset,
+      direction: direction,
+    );
+  }
+
   // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
-  EndPoint drawTransition(Canvas canvas, Transition transition, Offset start,
-      double travelDirection) {
-    Offset endOffset;
+  VisualTransition _getVisualTransition(
+    Canvas canvas,
+    Transition transition,
+    Offset start,
+    double travelDirection,
+  ) {
     switch (transition.move.abbreviation) {
       case 'Spiral':
         {
-          VisualTransition element = VisualSpiral(
+          return VisualSpiral(
             canvas: canvas,
             transition: transition,
             start: start,
             travelDirection: travelDirection,
-            getPaint: getPaint,
+            getPaint: _getPaint,
             ratio: 1.0,
           );
-          element.shiftAndDraw();
-          return element.endPoint();
         }
       case 'Step':
         {
@@ -112,95 +149,65 @@ class SequencePainter extends CustomPainter {
                   transition.exit.abbreviation[1]) {
             // This is where direction (backwards/forwards) doesn't change, but
             // the edge changes. Essentially it is moving on the same arc.
-            VisualTransition element = VisualContinueStep(
+            return VisualContinueStep(
               canvas: canvas,
               transition: transition,
               start: start,
               travelDirection: travelDirection,
-              getPaint: getPaint,
+              getPaint: _getPaint,
               ratio: 1.0,
             );
-            element.shiftAndDraw();
-            return element.endPoint();
           }
-          VisualTransition element = VisualStep(
+          return VisualStep(
             canvas: canvas,
             transition: transition,
             start: start,
             travelDirection: travelDirection,
-            getPaint: getPaint,
+            getPaint: _getPaint,
             ratio: 1.0,
           );
-          element.shiftAndDraw();
-          return element.endPoint();
         }
       case 'PwPull':
         {
-          VisualTransition element = VisualPowerPull(
+          return VisualPowerPull(
             canvas: canvas,
             transition: transition,
             start: start,
             travelDirection: travelDirection,
-            getPaint: getPaint,
+            getPaint: _getPaint,
             ratio: 1.0,
           );
-          element.shiftAndDraw();
-          return element.endPoint();
         }
       case '3Turn':
         {
-          VisualTransition element = VisualThreeTurn(
+          return VisualThreeTurn(
             canvas: canvas,
             transition: transition,
             start: start,
             travelDirection: travelDirection,
-            getPaint: getPaint,
+            getPaint: _getPaint,
             ratio: 1.0,
           );
-          element.shiftAndDraw();
-          return element.endPoint();
         }
       case 'Loop':
       // TODO: Add an 'x' to bunny hop to show toe.
       case 'Bunny Hop':
         {
-          VisualTransition element = VisualLoop(
+          return VisualLoop(
             canvas: canvas,
             transition: transition,
             start: start,
             travelDirection: travelDirection,
-            getPaint: getPaint,
+            getPaint: _getPaint,
             ratio: 1.0,
           );
-          element.shiftAndDraw();
-          return element.endPoint();
         }
       default:
-        {
-          canvas.drawCircle(
-            start,
-            3,
-            getPaint(
-              transition.entry.foot,
-              transition.entry.abbreviation,
-            ),
-          );
-
-          endOffset = Offset(start.dx + 20, start.dy + 20);
-          canvas.drawLine(
-            start,
-            endOffset,
-            getPaint(transition.entry.foot, transition.entry.abbreviation),
-          );
-          return EndPoint(
-            offset: endOffset,
-            direction: travelDirection,
-          );
-        }
+        return null;
     }
   }
 
-  Paint getPaint(String foot, String edge) {
+  Paint _getPaint(String foot, String edge) {
     if (foot == 'L') {
       return edge[0] == 'F' ? _leftPaint : _leftBackPaint;
     } else {
