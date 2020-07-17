@@ -136,8 +136,16 @@ class SequencePainter extends CustomPainter {
         }
       case 'PwPull':
         {
-          return drawPowerPull(
-              canvas, transition, start, travelDirection, getPaint);
+          VisualTransition element = VisualPowerPull(
+            canvas: canvas,
+            transition: transition,
+            start: start,
+            travelDirection: travelDirection,
+            getPaint: getPaint,
+            ratio: 1.0,
+          );
+          element.shiftAndDraw();
+          return element.endPoint();
         }
       case '3Turn':
         {

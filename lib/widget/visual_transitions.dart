@@ -243,51 +243,62 @@ class VisualContinueStep extends VisualTransition {
   }
 }
 
-EndPoint drawPowerPull(
-  Canvas canvas,
-  Transition transition,
-  Offset start,
-  double travelDirection,
-  Paint Function(String foot, String abbreviation) getPaint,
-) {
-  canvas.save();
-  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-  canvas.rotate(travelDirection);
-  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
-
-  double width = 100;
-  double height = 100;
-
-  Rect rect = Rect.fromCenter(
-    center: Offset(
-      start.dx - 1 / 2 * width,
-      start.dy,
-    ),
-    width: width,
-    height: height,
+class VisualPowerPull extends VisualTransition {
+  VisualPowerPull({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+    canvas: canvas,
+    transition: transition,
+    start: start,
+    travelDirection: travelDirection,
+    getPaint: getPaint,
+    ratio: ratio,
   );
-  canvas.drawArc(
-    rect,
-    0,
-    pi / 2,
-    false,
-    getPaint(transition.exit.foot, transition.exit.abbreviation),
-  );
-  canvas.restore();
 
-  final changeY = height / 2;
-  final changeX = width / 2;
-  return EndPoint(
-    offset: Offset(
-      start.dx -
-          changeY * sin(travelDirection) -
-          changeX * cos(travelDirection),
-      start.dy +
-          changeY * cos(travelDirection) -
-          changeX * sin(travelDirection),
-    ),
-    direction: travelDirection,
-  );
+  final double width = 100;
+  final double height = 100;
+
+  @override
+  void draw() {
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx - 1 / 2 * width,
+        start.dy,
+      ),
+      width: width,
+      height: height,
+    );
+    canvas.drawArc(
+      rect,
+      0,
+      pi / 2,
+      false,
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+  }
+
+  @override
+  endPoint() {
+    final changeY = height / 2;
+    final changeX = width / 2;
+    return EndPoint(
+      offset: Offset(
+        start.dx -
+            changeY * sin(travelDirection) -
+            changeX * cos(travelDirection),
+        start.dy +
+            changeY * cos(travelDirection) -
+            changeX * sin(travelDirection),
+      ),
+      direction: travelDirection,
+    );
+  }
+
 }
 
 EndPoint drawThreeTurn(
