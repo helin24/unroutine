@@ -23,44 +23,85 @@ Offset calculateOffsetWithDirection(Offset start, double direction) {
   return Offset(endX, endY);
 }
 
-EndPoint drawSpiral(
-  Canvas canvas,
-  Transition transition,
-  Offset start,
-  double travelDirection,
-  Function getPaint,
-) {
-  canvas.save();
-  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-  canvas.rotate(travelDirection);
-  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+abstract class VisualTransition {
+  VisualTransition({
+    this.canvas,
+    this.transition,
+    this.start,
+    this.travelDirection,
+    this.getPaint,
+    this.ratio,
+  });
 
-  double width = 100;
-  double height = 200;
-  Rect rect = Rect.fromCenter(
-    center: Offset(
-      start.dx,
-      start.dy + 1 / 2 * height,
-    ),
-    width: width,
-    height: height,
-  );
-  canvas.drawArc(
-    rect,
-    pi / 2,
-    pi,
-    false,
-    getPaint(transition.entry.foot, transition.entry.abbreviation),
-  );
-  canvas.restore();
+  final Canvas canvas;
+  final Transition transition;
+  final Offset start;
+  final double travelDirection;
+  final Function getPaint;
+  final double ratio;
 
-  return EndPoint(
-    offset: Offset(
-      start.dx - height * sin(travelDirection),
-      start.dy + height * cos(travelDirection),
-    ),
-    direction: travelDirection - pi / 2 + .1,
-  );
+  EndPoint endPoint();
+
+  void draw();
+}
+
+class VisualSpiral extends VisualTransition {
+  final double height = 200;
+  final double width = 100;
+
+  VisualSpiral({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
+
+  @override
+  void draw() {
+    canvas.save();
+    Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
+    canvas.rotate(travelDirection);
+    canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+
+    double width = 100;
+    double height = 200;
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx,
+        start.dy + 1 / 2 * height,
+      ),
+      width: width,
+      height: height,
+    );
+    canvas.drawArc(
+      rect,
+      pi / 2,
+      pi,
+      false,
+      getPaint(transition.entry.foot, transition.entry.abbreviation),
+    );
+    canvas.restore();
+  }
+
+  @override
+  EndPoint endPoint() {
+    return EndPoint(
+      offset: Offset(
+        start.dx - height * sin(travelDirection),
+        start.dy + height * cos(travelDirection),
+      ),
+      direction: travelDirection - pi / 2 + .1,
+    );
+  }
 }
 
 Paint getDebugPaint() {

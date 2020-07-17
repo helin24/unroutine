@@ -91,53 +91,70 @@ class SequencePainter extends CustomPainter {
       double travelDirection) {
     Offset endOffset;
     switch (transition.move.abbreviation) {
-      case 'Spiral': {
-        return drawSpiral(canvas, transition, start, travelDirection, getPaint);
-      }
-      case 'Step': {
-        if (transition.entry.abbreviation[0] == transition.exit.abbreviation[0] &&
-            transition.entry.abbreviation[1] != transition.exit.abbreviation[1]) {
-          // This is where direction (backwards/forwards) doesn't change, but
-          // the edge changes. Essentially it is moving on the same arc.
-          return drawContinueStep(
+      case 'Spiral':
+        {
+          VisualTransition element = VisualSpiral(
+            canvas: canvas,
+            transition: transition,
+            start: start,
+            travelDirection: travelDirection,
+            getPaint: getPaint,
+            ratio: 1.0,
+          );
+          element.draw();
+          return element.endPoint();
+        }
+      case 'Step':
+        {
+          if (transition.entry.abbreviation[0] ==
+                  transition.exit.abbreviation[0] &&
+              transition.entry.abbreviation[1] !=
+                  transition.exit.abbreviation[1]) {
+            // This is where direction (backwards/forwards) doesn't change, but
+            // the edge changes. Essentially it is moving on the same arc.
+            return drawContinueStep(
+                canvas, transition, start, travelDirection, getPaint);
+          }
+          return drawStep(canvas, transition, start, travelDirection, getPaint);
+        }
+      case 'PwPull':
+        {
+          return drawPowerPull(
               canvas, transition, start, travelDirection, getPaint);
         }
-        return drawStep(canvas, transition, start, travelDirection, getPaint);
-      }
-      case 'PwPull': {
-        return drawPowerPull(
-            canvas, transition, start, travelDirection, getPaint);
-      }
-      case '3Turn': {
-        return drawThreeTurn(
-            canvas, transition, start, travelDirection, getPaint);
-      }
+      case '3Turn':
+        {
+          return drawThreeTurn(
+              canvas, transition, start, travelDirection, getPaint);
+        }
       case 'Loop':
       // TODO: Add an 'x' to bunny hop to show toe.
-      case 'Bunny Hop': {
-        return drawLoop(canvas, transition, start, travelDirection, getPaint);
-      }
-      default: {
-        canvas.drawCircle(
-          start,
-          3,
-          getPaint(
-            transition.entry.foot,
-            transition.entry.abbreviation,
-          ),
-        );
+      case 'Bunny Hop':
+        {
+          return drawLoop(canvas, transition, start, travelDirection, getPaint);
+        }
+      default:
+        {
+          canvas.drawCircle(
+            start,
+            3,
+            getPaint(
+              transition.entry.foot,
+              transition.entry.abbreviation,
+            ),
+          );
 
-        endOffset = Offset(start.dx + 20, start.dy + 20);
-        canvas.drawLine(
-          start,
-          endOffset,
-          getPaint(transition.entry.foot, transition.entry.abbreviation),
-        );
-        return EndPoint(
-          offset: endOffset,
-          direction: travelDirection,
-        );
-      }
+          endOffset = Offset(start.dx + 20, start.dy + 20);
+          canvas.drawLine(
+            start,
+            endOffset,
+            getPaint(transition.entry.foot, transition.entry.abbreviation),
+          );
+          return EndPoint(
+            offset: endOffset,
+            direction: travelDirection,
+          );
+        }
     }
   }
 
