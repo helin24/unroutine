@@ -119,17 +119,18 @@ EndPoint drawStep(
 }
 
 EndPoint drawContinueStep(
-    Canvas canvas,
-    Transition transition,
-    Offset start,
-    double travelDirection,
-    Paint Function(String foot, String abbreviation) getPaint) {
+  Canvas canvas,
+  Transition transition,
+  Offset start,
+  double travelDirection,
+  Paint Function(String foot, String abbreviation) getPaint,
+) {
   canvas.save();
-
   travelDirection = travelDirection - 0.4;
   Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
   canvas.rotate(travelDirection);
   canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+
   double width = 100;
   double height = 100;
   double spacer = 5;
@@ -142,7 +143,6 @@ EndPoint drawContinueStep(
     width: width,
     height: height,
   );
-//  canvas.drawRect(rect, getDebugPaint());
   canvas.drawArc(
     rect,
     0,
