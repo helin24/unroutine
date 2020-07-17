@@ -101,7 +101,7 @@ class SequencePainter extends CustomPainter {
             getPaint: getPaint,
             ratio: 1.0,
           );
-          element.draw();
+          element.shiftAndDraw();
           return element.endPoint();
         }
       case 'Step':
@@ -120,7 +120,7 @@ class SequencePainter extends CustomPainter {
               getPaint: getPaint,
               ratio: 1.0,
             );
-            element.draw();
+            element.shiftAndDraw();
             return element.endPoint();
           }
           return drawStep(canvas, transition, start, travelDirection, getPaint);
