@@ -123,7 +123,16 @@ class SequencePainter extends CustomPainter {
             element.shiftAndDraw();
             return element.endPoint();
           }
-          return drawStep(canvas, transition, start, travelDirection, getPaint);
+          VisualTransition element = VisualStep(
+            canvas: canvas,
+            transition: transition,
+            start: start,
+            travelDirection: travelDirection,
+            getPaint: getPaint,
+            ratio: 1.0,
+          );
+          element.shiftAndDraw();
+          return element.endPoint();
         }
       case 'PwPull':
         {

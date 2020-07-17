@@ -125,52 +125,62 @@ Paint getDebugPaint() {
   return debugPaint;
 }
 
-EndPoint drawStep(
-  Canvas canvas,
-  Transition transition,
-  Offset start,
-  double travelDirection,
-  Paint Function(String foot, String abbreviation) getPaint,
-) {
-  canvas.save();
-  Offset rotatedOffset = calculateOffsetWithDirection(start, travelDirection);
-  canvas.rotate(travelDirection);
-  canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
-
-  double width = 100;
-  double height = 100;
-  double spacer = 20;
-
-  Rect rect = Rect.fromCenter(
-    center: Offset(
-      start.dx,
-      start.dy + 1 / 2 * height + spacer,
-    ),
-    width: width,
-    height: height,
+class VisualStep extends VisualTransition {
+  VisualStep({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+    canvas: canvas,
+    transition: transition,
+    start: start,
+    travelDirection: travelDirection,
+    getPaint: getPaint,
+    ratio: ratio,
   );
-  canvas.drawArc(
-    rect,
-    pi,
-    pi / 2,
-    false,
-    getPaint(transition.exit.foot, transition.exit.abbreviation),
-  );
-  canvas.restore();
 
-  final changeY = spacer + height / 2;
-  final changeX = width / 2;
-  return EndPoint(
-    offset: Offset(
-      start.dx -
-          changeY * sin(travelDirection) +
-          changeX * cos(travelDirection),
-      start.dy +
-          changeY * cos(travelDirection) -
-          changeX * sin(travelDirection),
-    ),
-    direction: travelDirection,
-  );
+  final double width = 100;
+  final double height = 100;
+  final double spacer = 20;
+
+  @override
+  void draw() {
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx,
+        start.dy + 1 / 2 * height + spacer,
+      ),
+      width: width,
+      height: height,
+    );
+    canvas.drawArc(
+      rect,
+      pi,
+      pi / 2,
+      false,
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+  }
+
+  @override
+  EndPoint endPoint() {
+    final changeY = spacer + height / 2;
+    final changeX = width / 2;
+    return EndPoint(
+      offset: Offset(
+        start.dx -
+            changeY * sin(travelDirection) +
+            changeX * cos(travelDirection),
+        start.dy +
+            changeY * cos(travelDirection) -
+            changeX * sin(travelDirection),
+      ),
+      direction: travelDirection,
+    );
+  }
 }
 
 class VisualContinueStep extends VisualTransition {
