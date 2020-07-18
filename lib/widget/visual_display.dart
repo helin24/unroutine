@@ -240,6 +240,15 @@ class SequencePainter extends CustomPainter {
           getPaint: _getPaint,
           ratio: 1.0,
         );
+      case 'Mohawk':
+        return VisualMohawk(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
       default:
         return VisualDefault(
           canvas: canvas,
