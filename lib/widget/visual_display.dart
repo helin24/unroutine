@@ -157,10 +157,19 @@ class SequencePainter extends CustomPainter {
           );
         }
       case 'Loop':
-      // TODO: Add an 'x' to bunny hop to show toe.
-      case 'Bunny Hop':
         {
           return VisualLoop(
+            canvas: canvas,
+            transition: transition,
+            start: start,
+            travelDirection: travelDirection,
+            getPaint: _getPaint,
+            ratio: 1.0,
+          );
+        }
+      case 'Bunny Hop':
+        {
+          return VisualBunnyHop(
             canvas: canvas,
             transition: transition,
             start: start,

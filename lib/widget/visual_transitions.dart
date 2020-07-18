@@ -43,7 +43,7 @@ abstract class VisualTransition {
 
   EndPoint endPoint();
 
-  void draw();
+  void _draw();
 
 // This is how much to move a point on the new canvas.
   Offset _calculateOffsetWithDirection() {
@@ -62,7 +62,7 @@ abstract class VisualTransition {
     Offset rotatedOffset = _calculateOffsetWithDirection();
     canvas.rotate(travelDirection + directionOffset);
     canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
-    draw();
+    _draw();
     canvas.restore();
   }
 
@@ -96,7 +96,7 @@ class VisualSpiral extends VisualTransition {
         );
 
   @override
-  void draw() {
+  void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx,
@@ -155,7 +155,7 @@ class VisualStep extends VisualTransition {
   final double spacer = 20;
 
   @override
-  void draw() {
+  void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx,
@@ -215,7 +215,7 @@ class VisualContinueStep extends VisualTransition {
   final double directionOffset = -0.4;
 
   @override
-  void draw() {
+  void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx - width / 2 + spacer,
@@ -272,7 +272,7 @@ class VisualPowerPull extends VisualTransition {
   final double height = 100;
 
   @override
-  void draw() {
+  void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx - 1 / 2 * width,
@@ -329,7 +329,7 @@ class VisualThreeTurn extends VisualTransition {
   final double height = 100;
 
   @override
-  void draw() {
+  void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx - 1 / 2 * width,
@@ -389,7 +389,7 @@ class VisualLoop extends VisualTransition {
   final double spacer = 30;
 
   @override
-  void draw() {
+  void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx - 1 / 2 * width,
@@ -425,6 +425,45 @@ class VisualLoop extends VisualTransition {
   }
 }
 
+class VisualBunnyHop extends VisualLoop {
+  VisualBunnyHop({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
+
+  final int markLength = 5;
+
+  @override
+  void _draw() {
+    super._draw();
+    _drawX();
+  }
+
+  void _drawX() {
+    canvas.drawLine(
+      Offset(start.dx - markLength, start.dy + spacer / 2),
+      Offset(start.dx + markLength, start.dy + spacer / 2),
+      getPaint(transition.entry.foot == 'L' ? 'R' : 'L', 'FO'),
+    );
+    canvas.drawLine(
+      Offset(start.dx, start.dy + spacer / 2 - markLength),
+      Offset(start.dx, start.dy + spacer / 2 + markLength),
+      getPaint(transition.entry.foot == 'L' ? 'R' : 'L', 'FO'),
+    );
+  }
+}
+
 class VisualDefault extends VisualTransition {
   VisualDefault({
     canvas,
@@ -445,7 +484,7 @@ class VisualDefault extends VisualTransition {
   final double height = 20;
 
   @override
-  void draw() {
+  void _draw() {
     canvas.drawCircle(
       start,
       3,
