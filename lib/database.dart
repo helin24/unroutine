@@ -53,6 +53,8 @@ class DatabaseProvider {
               'startEdge': jsonDecode(result['startEdge']),
               'transitions': jsonDecode(result['transitions']),
               'savedOn': result['savedOn'],
+              'audioUrl': result['audioUrl'],
+              'id': result['apiId'],
             })
         .toList();
 
