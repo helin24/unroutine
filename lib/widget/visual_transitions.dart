@@ -174,7 +174,7 @@ class VisualStep extends VisualTransition {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx,
-        start.dy + 1 / 2 * _getHeight() + _getSpacer(),
+        start.dy + _getHeight() / 2 + _getSpacer(),
       ),
       width: _getWidth(),
       height: _getHeight(),
@@ -190,7 +190,7 @@ class VisualStep extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeY = _getSpacer() + _getHeight() / 2;
+    final changeY = _getSpacer() / 2 + _getHeight() / 2;
     final changeX = _getWidth() / 2;
     return EndPoint(
       offset: Offset(
