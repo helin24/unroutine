@@ -267,7 +267,6 @@ class SequencePainter extends CustomPainter {
           getPaint: _getPaint,
           ratio: 1.0,
         );
-        ;
     }
   }
 
