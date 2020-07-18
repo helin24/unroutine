@@ -28,7 +28,7 @@ class SequenceModel {
           ? DateTime.fromMillisecondsSinceEpoch(
               (json['savedOn'] * 1000).round())
           : null,
-      audioUrl: json['audio'] != null ? json['audio'] : null,
+      audioUrl: json['audioUrl'] != null ? json['audioUrl'] : null,
       id: json['id'] != null ? json['id'] : null,
     );
   }
