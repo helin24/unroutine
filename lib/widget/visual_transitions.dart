@@ -479,6 +479,64 @@ class VisualBunnyHop extends VisualLoop {
   }
 }
 
+class VisualCrossRoll extends VisualTransition {
+  VisualCrossRoll({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+    canvas: canvas,
+    transition: transition,
+    start: start,
+    travelDirection: travelDirection,
+    getPaint: getPaint,
+    ratio: ratio,
+  );
+
+  final double width = 100;
+  final double height = 100;
+  final double spacer = 6;
+
+  @override
+  void _draw() {
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx - 1 / 2 * _getWidth() + _getSpacer(),
+        start.dy,
+      ),
+      width: _getWidth(),
+      height: _getHeight(),
+    );
+    canvas.drawArc(
+      rect,
+      0,
+      pi / 2,
+      false,
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+  }
+
+  @override
+  EndPoint endPoint() {
+    final changeY = _getHeight() / 2;
+    final changeX = _getWidth() / 2 - _getSpacer() / 2;
+    return EndPoint(
+      offset: Offset(
+        start.dx -
+            changeY * sin(travelDirection) -
+            changeX * cos(travelDirection),
+        start.dy +
+            changeY * cos(travelDirection) -
+            changeX * sin(travelDirection),
+      ),
+      direction: travelDirection + pi / 2,
+    );
+  }
+}
+
 class VisualDefault extends VisualTransition {
   VisualDefault({
     canvas,
@@ -508,7 +566,6 @@ class VisualDefault extends VisualTransition {
         transition.entry.abbreviation,
       ),
     );
-    print(travelDirection);
     Offset endOffset = Offset(start.dx, start.dy + _getHeight());
     canvas.drawLine(
       start,

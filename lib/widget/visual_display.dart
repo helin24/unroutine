@@ -152,16 +152,14 @@ class SequencePainter extends CustomPainter {
   ) {
     switch (transition.move.abbreviation) {
       case 'Spiral':
-        {
-          return VisualSpiral(
-            canvas: canvas,
-            transition: transition,
-            start: start,
-            travelDirection: travelDirection,
-            getPaint: _getPaint,
-            ratio: 1.0,
-          );
-        }
+        return VisualSpiral(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
       case 'Step':
         {
           if (transition.entry.abbreviation[0] ==
@@ -189,49 +187,50 @@ class SequencePainter extends CustomPainter {
           );
         }
       case 'PwPull':
-        {
-          return VisualPowerPull(
-            canvas: canvas,
-            transition: transition,
-            start: start,
-            travelDirection: travelDirection,
-            getPaint: _getPaint,
-            ratio: 1.0,
-          );
-        }
+        return VisualPowerPull(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
       case '3Turn':
-        {
-          return VisualThreeTurn(
-            canvas: canvas,
-            transition: transition,
-            start: start,
-            travelDirection: travelDirection,
-            getPaint: _getPaint,
-            ratio: 1.0,
-          );
-        }
+        return VisualThreeTurn(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
       case 'Loop':
-        {
-          return VisualLoop(
-            canvas: canvas,
-            transition: transition,
-            start: start,
-            travelDirection: travelDirection,
-            getPaint: _getPaint,
-            ratio: 1.0,
-          );
-        }
+        return VisualLoop(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
       case 'Bunny Hop':
-        {
-          return VisualBunnyHop(
-            canvas: canvas,
-            transition: transition,
-            start: start,
-            travelDirection: travelDirection,
-            getPaint: _getPaint,
-            ratio: 1.0,
-          );
-        }
+        return VisualBunnyHop(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
+      case 'Xroll':
+        return VisualCrossRoll(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
       default:
         return VisualDefault(
           canvas: canvas,
