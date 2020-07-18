@@ -6,6 +6,7 @@ import 'package:unroutine/model/sequence_model.dart';
 
 class DatabaseProvider {
   DatabaseProvider._();
+
   static final DatabaseProvider db = DatabaseProvider._();
 
   Database _database;
@@ -21,10 +22,20 @@ class DatabaseProvider {
       join(await getDatabasesPath(), 'sequence.db'),
       onCreate: (db, version) {
         return db.execute(
-            "CREATE TABLE sequences(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, startEdge TEXT, transitions TEXT, savedOn INTEGER)"
+          "CREATE TABLE sequences(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, startEdge TEXT, transitions TEXT, savedOn INTEGER, audioUrl TEXT, apiId INTEGER)",
         );
       },
-      version: 1,
+      onUpgrade: (db, oldVersion, newVersion) {
+        if (oldVersion < 3) {
+          db.execute(
+            "ALTER TABLE sequences ADD COLUMN audioUrl TEXT DEFAULT NULL",
+          );
+          db.execute(
+            "ALTER TABLE sequences ADD COLUMN apiId INTEGER DEFAULT NULL",
+          );
+        }
+      },
+      version: 3,
     );
   }
 
@@ -35,13 +46,17 @@ class DatabaseProvider {
 
   Future<List<SequenceModel>> sequences() async {
     final Database db = await database;
-    final List<Map<String,dynamic>> results = await db.query('sequences');
-    final List<Map<String,dynamic>> maps = results.map((result) => {
-      'name': result['name'],
-      'startEdge': jsonDecode(result['startEdge']),
-      'transitions': jsonDecode(result['transitions']),
-      'savedOn': result['savedOn'],
-    }).toList();
+    final List<Map<String, dynamic>> results = await db.query('sequences');
+    final List<Map<String, dynamic>> maps = results
+        .map((result) => {
+              'name': result['name'],
+              'startEdge': jsonDecode(result['startEdge']),
+              'transitions': jsonDecode(result['transitions']),
+              'savedOn': result['savedOn'],
+              'audioUrl': result['audioUrl'],
+              'id': result['apiId'],
+            })
+        .toList();
 
     return List.generate(maps.length, (i) {
       return SequenceModel.fromJson(maps[i]);

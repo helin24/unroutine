@@ -41,6 +41,7 @@ class SequenceModel {
       'transitions': jsonEncode(transitions),
       'savedOn': now.millisecondsSinceEpoch / 1000,
       'audioUrl': audioUrl,
+      'apiId': id,
     };
   }
 }
