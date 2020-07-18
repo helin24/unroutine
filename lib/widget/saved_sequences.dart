@@ -30,7 +30,9 @@ class SavedSequences extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
                             builder: (BuildContext context) => DisplaySequence(
-                                sequence: sequences.data[index]),
+                              sequence: sequences.data[index],
+                              saved: true,
+                            ),
                           ),
                         );
                       },

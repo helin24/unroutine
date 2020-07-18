@@ -12,13 +12,14 @@ import 'package:unroutine/widget/visual_display.dart';
 import 'camera_display.dart';
 
 class DisplaySequence extends StatefulWidget {
-  DisplaySequence({Key key, this.sequence}) : super(key: key);
+  DisplaySequence({Key key, this.sequence, this.saved = false}) : super(key: key);
 
   final SequenceModel sequence;
+  final bool saved;
 
   @override
   _DisplaySequenceState createState() =>
-      _DisplaySequenceState(sequence: sequence);
+      _DisplaySequenceState(sequence: sequence, saved: saved);
 }
 
 class _DisplaySequenceState extends State<DisplaySequence> {
@@ -26,7 +27,7 @@ class _DisplaySequenceState extends State<DisplaySequence> {
   final String title = 'Generated';
   final SequenceModel sequence;
 
-  _DisplaySequenceState({this.sequence});
+  _DisplaySequenceState({this.sequence, this.saved});
 
   void _onUnsave() {
     setState(() {
