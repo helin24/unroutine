@@ -130,9 +130,10 @@ class SequencePainter extends CustomPainter {
       ),
     );
 
-    for (var transition in sequence.transitions) {
-      VisualTransition element =
-          _getVisualTransition(canvas, transition, offset, direction);
+    for (VisualTransition element in visualTransitions) {
+      element.start = offset;
+      element.travelDirection = direction;
+      element.ratio = minRatio;
       element.shiftAndDraw();
       EndPoint result = element.endPoint();
       offset = result.offset;
