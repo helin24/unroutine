@@ -77,6 +77,7 @@ abstract class VisualTransition {
     Offset rotatedOffset = _calculateOffsetWithDirection();
     canvas.rotate(travelDirection + directionOffset);
     canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
+    _debugDrawAngle(canvas, start);
     _draw();
     canvas.restore();
   }
@@ -254,12 +255,8 @@ class VisualContinueStep extends VisualTransition {
     final newDirection = travelDirection + directionOffset;
     return EndPoint(
       offset: Offset(
-        start.dx +
-            changeY * sin(newDirection) -
-            changeX * cos(newDirection),
-        start.dy +
-            changeX * cos(newDirection) +
-            changeY * sin(newDirection),
+        start.dx + changeY * sin(newDirection) - changeX * cos(newDirection),
+        start.dy + changeX * cos(newDirection) + changeY * sin(newDirection),
       ),
       direction: newDirection,
     );
@@ -488,13 +485,13 @@ class VisualCrossRoll extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double width = 100;
   final double height = 100;
@@ -546,13 +543,13 @@ class VisualStepBehind extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double directionOffset = -0.3;
   final double width = 100;
@@ -605,13 +602,13 @@ class VisualMohawk extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double directionOffset = -pi / 2;
   final double width = 100;
@@ -641,6 +638,71 @@ class VisualMohawk extends VisualTransition {
   EndPoint endPoint() {
     final changeY = _getHeight() / 2 - _getSpacer();
     final changeX = _getWidth() / 2 - _getSpacer();
+    return EndPoint(
+      offset: Offset(
+        start.dx -
+            changeY * sin(travelDirection + directionOffset) -
+            changeX * cos(travelDirection + directionOffset),
+        start.dy +
+            changeY * cos(travelDirection + directionOffset) -
+            changeX * sin(travelDirection + directionOffset),
+      ),
+      direction: travelDirection + directionOffset + pi / 2,
+    );
+  }
+}
+
+class VisualCrossStep extends VisualTransition {
+  VisualCrossStep({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
+
+  final double width = 100;
+  final double height = 100;
+  final double spacer = 6;
+  final double directionOffset = 1.2;
+
+  @override
+  void _draw() {
+    _debugDrawAngle(canvas, start);
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx - 1 / 2 * _getWidth() - _getSpacer() / 2,
+        start.dy - _getSpacer(),
+      ),
+      width: _getWidth(),
+      height: _getHeight(),
+    );
+    canvas.drawLine(
+      Offset(start.dx - _getSpacer() / 2, start.dy - _getSpacer()),
+      Offset(start.dx + _getSpacer(), start.dy - _getSpacer() * 2),
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+    canvas.drawArc(
+      rect,
+      0,
+      pi / 2,
+      false,
+      getPaint(transition.exit.foot, transition.exit.abbreviation),
+    );
+  }
+
+  @override
+  EndPoint endPoint() {
+    final changeX = _getWidth() / 2 + _getSpacer() / 2;
+    final changeY = _getHeight() / 2 - _getSpacer();
     return EndPoint(
       offset: Offset(
         start.dx -
