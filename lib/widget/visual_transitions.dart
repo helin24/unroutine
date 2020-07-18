@@ -65,6 +65,14 @@ abstract class VisualTransition {
     draw();
     canvas.restore();
   }
+
+  _debugDrawAngle(Canvas canvas, Offset start) {
+    canvas.drawLine(
+      start,
+      Offset(start.dx, start.dy + 20),
+      getDebugPaint(),
+    );
+  }
 }
 
 class VisualSpiral extends VisualTransition {
@@ -134,13 +142,13 @@ class VisualStep extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double width = 100;
   final double height = 100;
@@ -192,13 +200,13 @@ class VisualContinueStep extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double width = 100;
   final double height = 100;
@@ -252,13 +260,13 @@ class VisualPowerPull extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double width = 100;
   final double height = 100;
@@ -309,13 +317,13 @@ class VisualThreeTurn extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   final double width = 100;
   final double height = 100;
@@ -366,13 +374,13 @@ class VisualLoop extends VisualTransition {
     getPaint,
     ratio,
   }) : super(
-    canvas: canvas,
-    transition: transition,
-    start: start,
-    travelDirection: travelDirection,
-    getPaint: getPaint,
-    ratio: ratio,
-  );
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
 
   @override
   final double directionOffset = pi / 2 - 0.4;
@@ -413,6 +421,56 @@ class VisualLoop extends VisualTransition {
             changeX * sin(travelDirection + directionOffset),
       ),
       direction: travelDirection + directionOffset + pi / 2,
+    );
+  }
+}
+
+class VisualDefault extends VisualTransition {
+  VisualDefault({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: getPaint,
+          ratio: ratio,
+        );
+
+  final double height = 20;
+
+  @override
+  void draw() {
+    canvas.drawCircle(
+      start,
+      3,
+      getPaint(
+        transition.entry.foot,
+        transition.entry.abbreviation,
+      ),
+    );
+    print(travelDirection);
+    Offset endOffset = Offset(start.dx, start.dy + height);
+    canvas.drawLine(
+      start,
+      endOffset,
+      getPaint(transition.entry.foot, transition.entry.abbreviation),
+    );
+  }
+
+  @override
+  EndPoint endPoint() {
+    return EndPoint(
+      offset: Offset(
+        start.dx - height * sin(travelDirection),
+        start.dy + height * cos(travelDirection),
+      ),
+      direction: travelDirection,
     );
   }
 }

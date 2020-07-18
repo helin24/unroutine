@@ -64,7 +64,7 @@ class SequencePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Offset offset = Offset(100, 40);
-    double direction = -0.2;
+    double direction = -0;
 
     // Starting position
     final firstTransition = sequence.transitions.first;
@@ -80,46 +80,13 @@ class SequencePainter extends CustomPainter {
     for (var transition in sequence.transitions) {
       VisualTransition element =
           _getVisualTransition(canvas, transition, offset, direction);
-      EndPoint result;
-      if (element == null) {
-        result = _drawDefault(canvas, transition, offset, direction);
-      } else {
-        element.shiftAndDraw();
-        result = element.endPoint();
-      }
-
+      element.shiftAndDraw();
+      EndPoint result = element.endPoint();
       offset = result.offset;
       direction = result.direction;
 
       canvas.drawCircle(offset, 3, getDebugPaint());
     }
-  }
-
-  EndPoint _drawDefault(
-    Canvas canvas,
-    Transition transition,
-    Offset offset,
-    double direction,
-  ) {
-    canvas.drawCircle(
-      offset,
-      3,
-      _getPaint(
-        transition.entry.foot,
-        transition.entry.abbreviation,
-      ),
-    );
-
-    Offset endOffset = Offset(offset.dx + 20, offset.dy + 20);
-    canvas.drawLine(
-      offset,
-      endOffset,
-      _getPaint(transition.entry.foot, transition.entry.abbreviation),
-    );
-    return EndPoint(
-      offset: endOffset,
-      direction: direction,
-    );
   }
 
   // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
@@ -203,7 +170,15 @@ class SequencePainter extends CustomPainter {
           );
         }
       default:
-        return null;
+        return VisualDefault(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
+        ;
     }
   }
 
