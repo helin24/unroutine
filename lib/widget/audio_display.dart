@@ -17,32 +17,31 @@ class AudioDisplay extends StatefulWidget {
 }
 
 class _AudioDisplayState extends State<AudioDisplay> {
-  final SequenceModel sequence;
-
   _AudioDisplayState({this.sequence});
 
   @override
   void initState() {
     super.initState();
-//    _setUpSpeech();
+    _setUpSpeech();
   }
 
-  final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayerState _audioState = AudioPlayerState.STOPPED;
   final SpeechToText _speech = SpeechToText();
   int _errorCount = 0;
+  final SequenceModel sequence;
+  bool speechAvailable = false;
 
   Future<void> _setUpSpeech() async {
-    bool available = await _speech.initialize( onStatus: _statusListener, onError: _errorListener );
-    if ( available ) {
-      _startListener();
-    }
-    else {
-      print("The user has denied the use of speech recognition.");
-    }
+    speechAvailable = await _speech.initialize( onStatus: _statusListener, onError: _errorListener );
   }
 
   void _startListener() {
-    _speech.listen(onResult: _resultListener);
+    if ( speechAvailable ) {
+      _speech.listen(onResult: _resultListener);
+    } else {
+      print("The user has denied the use of speech recognition.");
+    }
   }
 
   void _resultListener(SpeechRecognitionResult result) {
@@ -68,8 +67,11 @@ class _AudioDisplayState extends State<AudioDisplay> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IconButton(
-          icon: Icon(Icons.play_arrow),
+        _audioState == AudioPlayerState.PLAYING ? IconButton(
+          icon:  Icon(Icons.pause),
+          onPressed: _pause,
+        ) : IconButton(
+          icon:  Icon(Icons.play_arrow),
           onPressed: _play,
         ),
       ],
@@ -77,9 +79,25 @@ class _AudioDisplayState extends State<AudioDisplay> {
   }
 
   Future<void> _play() async {
-    if (sequence.audioUrl != null) {
-      await audioPlayer.play(sequence.audioUrl);
+    if (_audioPlayer.state == AudioPlayerState.PAUSED) {
+      await _audioPlayer.resume();
+    } else if (sequence.audioUrl != null) {
+      await _audioPlayer.play(sequence.audioUrl);
     }
+    _setAudioState();
     // TODO: Add error condition
   }
+
+  Future<void> _pause() async {
+    await _audioPlayer.pause();
+    _setAudioState();
+    // TODO: Add error condition
+  }
+
+  void _setAudioState() {
+    setState(() {
+      _audioState = _audioPlayer.state;
+    });
+  }
+
 }
