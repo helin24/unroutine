@@ -225,8 +225,7 @@ class VisualContinueStep extends VisualTransition {
 
   final double width = 100;
   final double height = 100;
-  final double spacer = 5;
-  @override
+  final double spacer = 6;
   final double directionOffset = -0.4;
 
   @override
@@ -250,18 +249,19 @@ class VisualContinueStep extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeY = _getHeight() / 2;
-    final changeX = -_getWidth() / 2 + _getSpacer();
+    final changeX = _getHeight() / 2 - _getSpacer();
+    final changeY = -_getWidth() / 2;
+    final newDirection = travelDirection + directionOffset;
     return EndPoint(
       offset: Offset(
         start.dx +
-            changeX * sin(travelDirection + directionOffset) -
-            changeY * cos(travelDirection + directionOffset),
+            changeY * sin(newDirection) -
+            changeX * cos(newDirection),
         start.dy +
-            changeY * cos(travelDirection + directionOffset) +
-            changeX * sin(travelDirection + directionOffset),
+            changeX * cos(newDirection) +
+            changeY * sin(newDirection),
       ),
-      direction: travelDirection + directionOffset,
+      direction: newDirection,
     );
   }
 }
