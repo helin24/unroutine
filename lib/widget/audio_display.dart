@@ -33,11 +33,14 @@ class _AudioDisplayState extends State<AudioDisplay> {
   bool speechAvailable = false;
 
   Future<void> _setUpSpeech() async {
-    speechAvailable = await _speech.initialize( onStatus: _statusListener, onError: _errorListener );
+    speechAvailable = await _speech.initialize(
+      onStatus: _statusListener,
+      onError: _errorListener,
+    );
   }
 
   void _startListener() {
-    if ( speechAvailable ) {
+    if (speechAvailable) {
       _speech.listen(onResult: _resultListener);
     } else {
       print("The user has denied the use of speech recognition.");
@@ -45,7 +48,10 @@ class _AudioDisplayState extends State<AudioDisplay> {
   }
 
   void _resultListener(SpeechRecognitionResult result) {
-    if (result.alternates.map((e) => e.recognizedWords).join(' ').contains('play')) {
+    if (result.alternates
+        .map((e) => e.recognizedWords)
+        .join(' ')
+        .contains('play')) {
       _play();
     }
     _startListener();
@@ -67,12 +73,27 @@ class _AudioDisplayState extends State<AudioDisplay> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _audioState == AudioPlayerState.PLAYING ? IconButton(
-          icon:  Icon(Icons.pause),
-          onPressed: _pause,
-        ) : IconButton(
-          icon:  Icon(Icons.play_arrow),
-          onPressed: _play,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(Icons.fast_rewind),
+              onPressed: _rewind,
+            ),
+            _audioState == AudioPlayerState.PLAYING
+                ? IconButton(
+                    icon: Icon(Icons.pause),
+                    onPressed: _pause,
+                  )
+                : IconButton(
+                    icon: Icon(Icons.play_arrow),
+                    onPressed: _play,
+                  ),
+            IconButton(
+              icon: Icon(Icons.fast_forward),
+              onPressed: _fastForward,
+            ),
+          ],
         ),
       ],
     );
@@ -94,10 +115,22 @@ class _AudioDisplayState extends State<AudioDisplay> {
     // TODO: Add error condition
   }
 
+  Future<void> _rewind() async {
+    // This works while paused and playing
+    await _audioPlayer.getCurrentPosition().then((int position) async {
+      await _audioPlayer.seek(Duration(milliseconds: position - 2000));
+    });
+  }
+
+  Future<void> _fastForward() async {
+    await _audioPlayer.getCurrentPosition().then((int position) async {
+      await _audioPlayer.seek(Duration(milliseconds: position + 2000));
+    });
+  }
+
   void _setAudioState() {
     setState(() {
       _audioState = _audioPlayer.state;
     });
   }
-
 }
