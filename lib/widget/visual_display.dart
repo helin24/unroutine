@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:unroutine/model/sequence_model.dart';
 import 'package:flutter/material.dart';
@@ -63,10 +65,61 @@ class SequencePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Offset offset = Offset(100, 40);
-    double direction = -0;
+    Offset offset = Offset(0, 0);
+    double direction = 0;
 
-    // Starting position
+    Iterable<VisualTransition> visualTransitions = sequence.transitions.map(
+      (Transition t) => _getVisualTransition(
+        canvas,
+        t,
+        offset,
+        direction,
+      ),
+    );
+
+    double minDx = 0, maxDx = 0, minDy = 0, maxDy = 0;
+    for (VisualTransition vt in visualTransitions) {
+      EndPoint end = vt.endPoint();
+      direction = end.direction;
+      offset = end.offset;
+
+      if (offset.dx < minDx) {
+        minDx = offset.dx;
+      }
+      if (offset.dx > maxDx) {
+        maxDx = offset.dx;
+      }
+      if (offset.dy < minDy) {
+        minDy = offset.dy;
+      }
+      if (offset.dy > maxDy) {
+        maxDy = offset.dy;
+      }
+    }
+
+    double padding = 20;
+    double screenWidth = size.width - 2 * padding;
+    double screenHeight = size.height - 2 * padding;
+
+    // Resize factor for the smaller ratio
+    double ratioX = screenWidth / (maxDx - minDx);
+    double ratioY = screenHeight / (maxDy - minDy);
+    double minRatio = min(ratioX, ratioY);
+
+    // Shift starting point
+    double offsetX = -minDx * minRatio +
+        padding +
+        (screenWidth - (maxDx - minDx) * minRatio) / 2;
+    double offsetY = -minDy * minRatio +
+        padding +
+        (screenHeight - (maxDy - minDy) * minRatio) / 2;
+
+    // TODO: Handle if width > height
+
+    offset = Offset(offsetX, offsetY);
+    direction = 0;
+
+    // Draw starting position
     final firstTransition = sequence.transitions.first;
     canvas.drawCircle(
       offset,
@@ -77,9 +130,10 @@ class SequencePainter extends CustomPainter {
       ),
     );
 
-    for (var transition in sequence.transitions) {
-      VisualTransition element =
-          _getVisualTransition(canvas, transition, offset, direction);
+    for (VisualTransition element in visualTransitions) {
+      element.start = offset;
+      element.travelDirection = direction;
+      element.ratio = minRatio;
       element.shiftAndDraw();
       EndPoint result = element.endPoint();
       offset = result.offset;
@@ -89,7 +143,7 @@ class SequencePainter extends CustomPainter {
     }
   }
 
-  // Travel direction will be 0 for moving to the right, pi/2 for moving down, etc.
+  // Travel direction will be 0 for moving down, pi/2 for moving left, etc.
   VisualTransition _getVisualTransition(
     Canvas canvas,
     Transition transition,

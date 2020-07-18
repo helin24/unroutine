@@ -35,11 +35,26 @@ abstract class VisualTransition {
 
   final Canvas canvas;
   final Transition transition;
-  final Offset start;
-  final double travelDirection;
+  Offset start;
+  double travelDirection;
   final double directionOffset = 0;
   final Function getPaint;
-  final double ratio;
+  double ratio = 1;
+  double height;
+  double width;
+  double spacer;
+
+  double _getHeight() {
+    return height == null ? null : height * ratio;
+  }
+
+  double _getWidth() {
+    return width == null ? null : width * ratio;
+  }
+
+  double _getSpacer() {
+    return spacer == null ? null : spacer * ratio;
+  }
 
   EndPoint endPoint();
 
@@ -100,10 +115,10 @@ class VisualSpiral extends VisualTransition {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx,
-        start.dy + 1 / 2 * height,
+        start.dy + 1 / 2 * _getHeight(),
       ),
-      width: width,
-      height: height,
+      width: _getWidth(),
+      height: _getHeight(),
     );
     canvas.drawArc(
       rect,
@@ -118,8 +133,8 @@ class VisualSpiral extends VisualTransition {
   EndPoint endPoint() {
     return EndPoint(
       offset: Offset(
-        start.dx - height * sin(travelDirection),
-        start.dy + height * cos(travelDirection),
+        start.dx - _getHeight() * sin(travelDirection),
+        start.dy + _getHeight() * cos(travelDirection),
       ),
       direction: travelDirection - pi / 2 + .1,
     );
@@ -159,10 +174,10 @@ class VisualStep extends VisualTransition {
     Rect rect = Rect.fromCenter(
       center: Offset(
         start.dx,
-        start.dy + 1 / 2 * height + spacer,
+        start.dy + _getHeight() / 2 + _getSpacer(),
       ),
-      width: width,
-      height: height,
+      width: _getWidth(),
+      height: _getHeight(),
     );
     canvas.drawArc(
       rect,
@@ -175,8 +190,8 @@ class VisualStep extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeY = spacer + height / 2;
-    final changeX = width / 2;
+    final changeY = _getSpacer() / 2 + _getHeight() / 2;
+    final changeX = _getWidth() / 2;
     return EndPoint(
       offset: Offset(
         start.dx -
@@ -218,11 +233,11 @@ class VisualContinueStep extends VisualTransition {
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx - width / 2 + spacer,
+        start.dx - _getWidth() / 2 + _getSpacer(),
         start.dy,
       ),
-      width: width,
-      height: height,
+      width: _getWidth(),
+      height: _getHeight(),
     );
     canvas.drawArc(
       rect,
@@ -235,8 +250,8 @@ class VisualContinueStep extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeY = height / 2;
-    final changeX = -width / 2 + spacer;
+    final changeY = _getHeight() / 2;
+    final changeX = -_getWidth() / 2 + _getSpacer();
     return EndPoint(
       offset: Offset(
         start.dx +
@@ -275,11 +290,11 @@ class VisualPowerPull extends VisualTransition {
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx - 1 / 2 * width,
+        start.dx - 1 / 2 * _getWidth(),
         start.dy,
       ),
-      width: width,
-      height: height,
+      width: _getWidth(),
+      height: _getHeight(),
     );
     canvas.drawArc(
       rect,
@@ -292,8 +307,8 @@ class VisualPowerPull extends VisualTransition {
 
   @override
   endPoint() {
-    final changeY = height / 2;
-    final changeX = width / 2;
+    final changeY = _getHeight() / 2;
+    final changeX = _getWidth() / 2;
     return EndPoint(
       offset: Offset(
         start.dx -
@@ -332,11 +347,11 @@ class VisualThreeTurn extends VisualTransition {
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx - 1 / 2 * width,
+        start.dx - 1 / 2 * _getWidth(),
         start.dy,
       ),
-      width: width,
-      height: height,
+      width: _getWidth(),
+      height: _getHeight(),
     );
     canvas.drawArc(
       rect,
@@ -349,8 +364,8 @@ class VisualThreeTurn extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeY = height / 2;
-    final changeX = width / 2;
+    final changeY = _getHeight() / 2;
+    final changeX = _getWidth() / 2;
     return EndPoint(
       offset: Offset(
         start.dx -
@@ -392,11 +407,11 @@ class VisualLoop extends VisualTransition {
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx - 1 / 2 * width,
-        start.dy + spacer,
+        start.dx - 1 / 2 * _getWidth(),
+        start.dy + _getSpacer(),
       ),
-      width: width,
-      height: height,
+      width: _getWidth(),
+      height: _getHeight(),
     );
     canvas.drawArc(
       rect,
@@ -409,8 +424,8 @@ class VisualLoop extends VisualTransition {
 
   @override
   endPoint() {
-    final changeY = height / 2 + spacer;
-    final changeX = width / 2;
+    final changeY = _getHeight() / 2 + _getSpacer();
+    final changeX = _getWidth() / 2;
     return EndPoint(
       offset: Offset(
         start.dx -
@@ -452,13 +467,13 @@ class VisualBunnyHop extends VisualLoop {
 
   void _drawX() {
     canvas.drawLine(
-      Offset(start.dx - markLength, start.dy + spacer / 2),
-      Offset(start.dx + markLength, start.dy + spacer / 2),
+      Offset(start.dx - markLength, start.dy + _getSpacer() / 2),
+      Offset(start.dx + markLength, start.dy + _getSpacer() / 2),
       getPaint(transition.entry.foot == 'L' ? 'R' : 'L', 'FO'),
     );
     canvas.drawLine(
-      Offset(start.dx, start.dy + spacer / 2 - markLength),
-      Offset(start.dx, start.dy + spacer / 2 + markLength),
+      Offset(start.dx, start.dy + _getSpacer() / 2 - markLength),
+      Offset(start.dx, start.dy + _getSpacer() / 2 + markLength),
       getPaint(transition.entry.foot == 'L' ? 'R' : 'L', 'FO'),
     );
   }
@@ -494,7 +509,7 @@ class VisualDefault extends VisualTransition {
       ),
     );
     print(travelDirection);
-    Offset endOffset = Offset(start.dx, start.dy + height);
+    Offset endOffset = Offset(start.dx, start.dy + _getHeight());
     canvas.drawLine(
       start,
       endOffset,
@@ -506,8 +521,8 @@ class VisualDefault extends VisualTransition {
   EndPoint endPoint() {
     return EndPoint(
       offset: Offset(
-        start.dx - height * sin(travelDirection),
-        start.dy + height * cos(travelDirection),
+        start.dx - _getHeight() * sin(travelDirection),
+        start.dy + _getHeight() * cos(travelDirection),
       ),
       direction: travelDirection,
     );
