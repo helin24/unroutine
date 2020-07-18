@@ -17,9 +17,6 @@ class AudioDisplay extends StatefulWidget {
 }
 
 class _AudioDisplayState extends State<AudioDisplay> {
-  final SequenceModel sequence;
-  bool speechAvailable = false;
-
   _AudioDisplayState({this.sequence});
 
   @override
@@ -28,9 +25,12 @@ class _AudioDisplayState extends State<AudioDisplay> {
     _setUpSpeech();
   }
 
-  final AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayerState _audioState = AudioPlayerState.STOPPED;
   final SpeechToText _speech = SpeechToText();
   int _errorCount = 0;
+  final SequenceModel sequence;
+  bool speechAvailable = false;
 
   Future<void> _setUpSpeech() async {
     speechAvailable = await _speech.initialize( onStatus: _statusListener, onError: _errorListener );
@@ -67,8 +67,11 @@ class _AudioDisplayState extends State<AudioDisplay> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IconButton(
-          icon: Icon(Icons.play_arrow),
+        _audioState == AudioPlayerState.PLAYING ? IconButton(
+          icon:  Icon(Icons.pause),
+          onPressed: _pause,
+        ) : IconButton(
+          icon:  Icon(Icons.play_arrow),
           onPressed: _play,
         ),
       ],
@@ -76,9 +79,25 @@ class _AudioDisplayState extends State<AudioDisplay> {
   }
 
   Future<void> _play() async {
-    if (sequence.audioUrl != null) {
-      await audioPlayer.play(sequence.audioUrl);
+    if (_audioPlayer.state == AudioPlayerState.PAUSED) {
+      await _audioPlayer.resume();
+    } else if (sequence.audioUrl != null) {
+      await _audioPlayer.play(sequence.audioUrl);
     }
+    _setAudioState();
     // TODO: Add error condition
   }
+
+  Future<void> _pause() async {
+    await _audioPlayer.pause();
+    _setAudioState();
+    // TODO: Add error condition
+  }
+
+  void _setAudioState() {
+    setState(() {
+      _audioState = _audioPlayer.state;
+    });
+  }
+
 }
