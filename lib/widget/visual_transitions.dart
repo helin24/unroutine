@@ -753,7 +753,11 @@ class VisualCrossStep extends VisualTransition {
 class VisualSpreadEagle extends VisualTransition {
   final double height = 100;
   final double width = 150;
-  final double directionOffset = 0.4;
+
+  @override
+  double _getDirectionOffset() {
+    return cw ? -0.4 : 0.4;
+  }
 
   VisualSpreadEagle({
     canvas,
@@ -775,7 +779,7 @@ class VisualSpreadEagle extends VisualTransition {
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx + _getWidth() / 2,
+        start.dx + _getWidth() / 2 * (cw ? -1 : 1),
         start.dy,
       ),
       width: _getWidth(),
@@ -792,11 +796,11 @@ class VisualSpreadEagle extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final double newDirection = travelDirection + directionOffset;
+    final double newDirection = travelDirection + _getDirectionOffset();
     return EndPoint(
       offset: Offset(
-        start.dx + _getWidth() * cos(newDirection),
-        start.dy + _getWidth() * sin(newDirection),
+        start.dx + _getWidth() * cos(newDirection) * (cw ? -1 : 1),
+        start.dy + _getWidth() * sin(newDirection) * (cw ? -1 : 1),
       ),
       direction: newDirection - pi + .1,
     );
