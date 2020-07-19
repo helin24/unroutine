@@ -19,7 +19,7 @@ class VisualDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(saved ? 'Saved!' : ''),
+            Text(saved ? '' : ''),
           ],
         ),
       ),

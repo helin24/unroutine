@@ -256,7 +256,8 @@ class VisualContinueStep extends VisualTransition {
 
   final double width = 100;
   final double height = 100;
-  final double spacer = 6;
+  // TOOD: Something is wrong with the calculation below with a spacer.
+  final double spacer = 0;
   final double directionOffset = -0.4;
 
   @override
