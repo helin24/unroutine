@@ -23,6 +23,17 @@ Offset calculateOffsetWithDirection(Offset start, double direction) {
   return Offset(endX, endY);
 }
 
+const Map<String, bool> edgeToCwMap = const {
+  'LFI': true,
+  'LFO': false,
+  'RFI': false,
+  'RFO': true,
+  'LBI': false,
+  'LBO': true,
+  'RBI': true,
+  'RBO': false,
+};
+
 abstract class VisualTransition {
   VisualTransition({
     this.canvas,
@@ -31,7 +42,9 @@ abstract class VisualTransition {
     this.travelDirection,
     this.getPaint,
     this.ratio,
-  });
+  }) {
+    this.cw = _isCwCurve();
+  }
 
   final Canvas canvas;
   final Transition transition;
@@ -43,6 +56,7 @@ abstract class VisualTransition {
   double height;
   double width;
   double spacer;
+  bool cw;
 
   double _getHeight() {
     return height == null ? null : height * ratio;
@@ -56,6 +70,15 @@ abstract class VisualTransition {
     return spacer == null ? null : spacer * ratio;
   }
 
+  double _getDirectionOffset() {
+    return directionOffset;
+  }
+
+  bool _isCwCurve() {
+    final String edge = transition.exit.foot + transition.exit.abbreviation;
+    return edgeToCwMap[edge];
+  }
+
   EndPoint endPoint();
 
   void _draw();
@@ -64,7 +87,7 @@ abstract class VisualTransition {
   Offset _calculateOffsetWithDirection() {
     double hypotenuse = sqrt(pow(start.dx, 2) + pow(start.dy, 2));
     double initialAngle = atan(start.dx / start.dy);
-    double finalAngle = initialAngle + travelDirection + directionOffset;
+    double finalAngle = initialAngle + travelDirection + _getDirectionOffset();
     double endX = sin(finalAngle) * hypotenuse;
     double endY = cos(finalAngle) * hypotenuse;
 //  print('${start.dx} -> ${endX}');
@@ -75,7 +98,7 @@ abstract class VisualTransition {
   void shiftAndDraw() {
     canvas.save();
     Offset rotatedOffset = _calculateOffsetWithDirection();
-    canvas.rotate(travelDirection + directionOffset);
+    canvas.rotate(travelDirection + _getDirectionOffset());
     canvas.translate(rotatedOffset.dx - start.dx, rotatedOffset.dy - start.dy);
     _debugDrawAngle(canvas, start);
     _draw();
@@ -172,10 +195,15 @@ class VisualStep extends VisualTransition {
   final double directionOffset = -pi / 3;
 
   @override
+  double _getDirectionOffset() {
+    return cw ? pi / 3 : -pi / 3;
+  }
+
+  @override
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx - _getSpacer() / 2,
+        start.dx + _getSpacer() / 2 * (cw ? 1 : -1),
         start.dy + _getHeight() / 2,
       ),
       width: _getWidth(),
@@ -183,7 +211,7 @@ class VisualStep extends VisualTransition {
     );
     canvas.drawArc(
       rect,
-      pi,
+      cw ? -pi / 2 : pi,
       pi / 2,
       false,
       getPaint(transition.exit.foot, transition.exit.abbreviation),
@@ -192,11 +220,11 @@ class VisualStep extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeX = _getWidth() / 2 + _getSpacer() / 2;
+    final changeX = (_getWidth() / 2 + _getSpacer() / 2) * (cw ? -1 : 1);
     final changeY = _getHeight() / 2;
     print(changeY);
     print(changeX);
-    final newDirection = travelDirection + directionOffset;
+    final newDirection = travelDirection + _getDirectionOffset();
     print(newDirection);
     return EndPoint(
       offset: Offset(
