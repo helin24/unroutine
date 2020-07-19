@@ -222,10 +222,7 @@ class VisualStep extends VisualTransition {
   EndPoint endPoint() {
     final changeX = (_getWidth() / 2 + _getSpacer() / 2) * (cw ? -1 : 1);
     final changeY = _getHeight() / 2;
-    print(changeY);
-    print(changeX);
     final newDirection = travelDirection + _getDirectionOffset();
-    print(newDirection);
     return EndPoint(
       offset: Offset(
         start.dx -
