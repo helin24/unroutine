@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -30,17 +32,18 @@ class _AudioDisplayState extends State<AudioDisplay> {
   final SpeechToText _speech = SpeechToText();
   int _errorCount = 0;
   final SequenceModel sequence;
-  bool speechAvailable = false;
+  bool _speechAvailable = false;
+  double _playbackRate = 1.0;
 
   Future<void> _setUpSpeech() async {
-    speechAvailable = await _speech.initialize(
+    _speechAvailable = await _speech.initialize(
       onStatus: _statusListener,
       onError: _errorListener,
     );
   }
 
   void _startListener() {
-    if (speechAvailable) {
+    if (_speechAvailable) {
       _speech.listen(onResult: _resultListener);
     } else {
       print("The user has denied the use of speech recognition.");
@@ -95,6 +98,19 @@ class _AudioDisplayState extends State<AudioDisplay> {
             ),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: Icon(Icons.directions_walk),
+              onPressed: _slowDown,
+            ),
+            IconButton(
+              icon: Icon(Icons.directions_run),
+              onPressed: _speedUp,
+            ),
+          ],
+        )
       ],
     );
   }
@@ -127,6 +143,21 @@ class _AudioDisplayState extends State<AudioDisplay> {
       await _audioPlayer.seek(Duration(milliseconds: position + 2000));
     });
   }
+
+  Future<void> _slowDown() async {
+    double newRate = max(0.25, _playbackRate - 0.25);
+    await _audioPlayer.setPlaybackRate(playbackRate: newRate);
+    setState(() {
+      _playbackRate = newRate;
+    });
+  }
+
+  Future<void> _speedUp() async {
+    double newRate = min(2, _playbackRate + 0.25);
+    await _audioPlayer.setPlaybackRate(playbackRate: newRate);
+    setState(() {
+      _playbackRate = newRate;
+    });  }
 
   void _setAudioState() {
     setState(() {
