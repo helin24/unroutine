@@ -374,6 +374,11 @@ class VisualThreeTurn extends VisualTransition {
   final double height = 100;
 
   @override
+  double _getDirectionOffset() {
+    return -pi / 2;
+  }
+
+  @override
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
@@ -396,16 +401,17 @@ class VisualThreeTurn extends VisualTransition {
   EndPoint endPoint() {
     final changeY = _getHeight() / 2;
     final changeX = _getWidth() / 2;
+    final newDirection = travelDirection + _getDirectionOffset();
     return EndPoint(
       offset: Offset(
         start.dx -
-            changeY * sin(travelDirection) -
-            changeX * cos(travelDirection),
+            changeY * sin(newDirection) -
+            changeX * cos(newDirection),
         start.dy +
-            changeY * cos(travelDirection) -
-            changeX * sin(travelDirection),
+            changeY * cos(newDirection) -
+            changeX * sin(newDirection),
       ),
-      direction: travelDirection,
+      direction: newDirection,
     );
   }
 }
