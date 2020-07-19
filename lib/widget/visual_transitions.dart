@@ -169,13 +169,14 @@ class VisualStep extends VisualTransition {
   final double width = 100;
   final double height = 100;
   final double spacer = 20;
+  final double directionOffset = -pi / 3;
 
   @override
   void _draw() {
     Rect rect = Rect.fromCenter(
       center: Offset(
-        start.dx,
-        start.dy + _getHeight() / 2 + _getSpacer(),
+        start.dx - _getSpacer() / 2,
+        start.dy + _getHeight() / 2,
       ),
       width: _getWidth(),
       height: _getHeight(),
@@ -191,18 +192,22 @@ class VisualStep extends VisualTransition {
 
   @override
   EndPoint endPoint() {
-    final changeY = _getSpacer() / 2 + _getHeight() / 2;
-    final changeX = _getWidth() / 2;
+    final changeX = _getWidth() / 2 + _getSpacer() / 2;
+    final changeY = _getHeight() / 2;
+    print(changeY);
+    print(changeX);
+    final newDirection = travelDirection + directionOffset;
+    print(newDirection);
     return EndPoint(
       offset: Offset(
         start.dx -
-            changeY * sin(travelDirection) +
-            changeX * cos(travelDirection),
-        start.dy +
-            changeY * cos(travelDirection) -
-            changeX * sin(travelDirection),
+            changeX * cos(newDirection) -
+            changeY * sin(newDirection),
+        start.dy -
+            changeX * sin(newDirection) +
+            changeY * cos(newDirection),
       ),
-      direction: travelDirection,
+      direction: newDirection,
     );
   }
 }
@@ -519,7 +524,7 @@ class VisualCrossRoll extends VisualTransition {
   @override
   EndPoint endPoint() {
     final changeY = _getHeight() / 2;
-    final changeX = _getWidth() / 2 - _getSpacer() / 2;
+    final changeX = _getWidth() / 2 - _getSpacer();
     return EndPoint(
       offset: Offset(
         start.dx -
