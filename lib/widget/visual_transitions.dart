@@ -722,6 +722,59 @@ class VisualCrossStep extends VisualTransition {
   }
 }
 
+class VisualSpreadEagle extends VisualTransition {
+  final double height = 100;
+  final double width = 150;
+  final double directionOffset = 0.4;
+
+  VisualSpreadEagle({
+    canvas,
+    transition,
+    start,
+    travelDirection,
+    getPaint,
+    ratio,
+  }) : super(
+    canvas: canvas,
+    transition: transition,
+    start: start,
+    travelDirection: travelDirection,
+    getPaint: getPaint,
+    ratio: ratio,
+  );
+
+  @override
+  void _draw() {
+    Rect rect = Rect.fromCenter(
+      center: Offset(
+        start.dx + _getWidth() / 2,
+        start.dy,
+      ),
+      width: _getWidth(),
+      height: _getHeight(),
+    );
+    canvas.drawArc(
+      rect,
+      0,
+      pi,
+      false,
+      getPaint(transition.entry.foot, transition.entry.abbreviation),
+    );
+  }
+
+  @override
+  EndPoint endPoint() {
+    final double newDirection = travelDirection + directionOffset;
+    return EndPoint(
+      offset: Offset(
+        start.dx + _getWidth() * cos(newDirection),
+        start.dy + _getWidth() * sin(newDirection),
+      ),
+      direction: newDirection - pi + .1,
+    );
+  }
+}
+
 class VisualDefault extends VisualTransition {
   VisualDefault({
     canvas,
