@@ -45,8 +45,9 @@ class _UserSettingsState extends State<UserSettings> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -81,10 +82,16 @@ class _UserSettingsState extends State<UserSettings> {
                 ),
               ],
             ),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Level '),
+                Spacer(flex: 2),
+                Text(
+                  'Level',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                Spacer(),
                 DropdownButton<String>(
                   value: level,
                   onChanged: onLevelChanged,
@@ -92,13 +99,18 @@ class _UserSettingsState extends State<UserSettings> {
                       .map(
                         (Level level) => DropdownMenuItem<String>(
                           value: level.abbreviation,
-                          child: Text(level.name),
+                          child: Text(
+                            level.name,
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                         ),
                       )
                       .toList(),
                 ),
+                Spacer(flex: 2),
               ],
             ),
+            Divider(),
             FlatButton(
               onPressed: onGeneratePressed,
               child: Text('Generate'),
