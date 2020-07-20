@@ -45,23 +45,53 @@ class _UserSettingsState extends State<UserSettings> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('User settings'),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Clockwise?'),
-                Checkbox(
-                  value: clockwise,
-                  onChanged: onClockwiseChanged,
+                Text(
+                  'Rotation direction',
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.rotate_left,
+                  color: clockwise
+                      ? Theme.of(context).disabledColor
+                      : Colors.orange,
+                ),
+                Switch(
+                  value: clockwise,
+                  onChanged: onClockwiseChanged,
+                  activeColor: Colors.green,
+                  activeTrackColor: Colors.lightGreen,
+                  inactiveThumbColor: Colors.orange,
+                  inactiveTrackColor: Colors.orangeAccent,
+                ),
+                Icon(
+                  Icons.rotate_right,
+                  color: clockwise
+                      ? Colors.green
+                      : Theme.of(context).disabledColor,
+                ),
+              ],
+            ),
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Level '),
+                Spacer(flex: 2),
+                Text(
+                  'Level',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                Spacer(),
                 DropdownButton<String>(
                   value: level,
                   onChanged: onLevelChanged,
@@ -69,16 +99,28 @@ class _UserSettingsState extends State<UserSettings> {
                       .map(
                         (Level level) => DropdownMenuItem<String>(
                           value: level.abbreviation,
-                          child: Text(level.name),
+                          child: Text(
+                            level.name,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.primaryVariant,
+                              fontSize: 18,
+                            ),
+                          ),
                         ),
                       )
                       .toList(),
                 ),
+                Spacer(flex: 2),
               ],
             ),
-            FlatButton(
+            Divider(),
+            ElevatedButton(
               onPressed: onGeneratePressed,
-              child: Text('Generate'),
+              child: Text(
+                'Generate',
+                style: TextStyle(fontSize: 24),
+              ),
             ),
           ],
         ),
