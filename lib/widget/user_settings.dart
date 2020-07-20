@@ -53,7 +53,7 @@ class _UserSettingsState extends State<UserSettings> {
               children: <Widget>[
                 Text(
                   'Rotation direction',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ],
             ),
@@ -89,7 +89,7 @@ class _UserSettingsState extends State<UserSettings> {
                 Spacer(flex: 2),
                 Text(
                   'Level',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 Spacer(),
                 DropdownButton<String>(
@@ -101,7 +101,11 @@ class _UserSettingsState extends State<UserSettings> {
                           value: level.abbreviation,
                           child: Text(
                             level.name,
-                            style: Theme.of(context).textTheme.headline5,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.primaryVariant,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       )
@@ -111,9 +115,12 @@ class _UserSettingsState extends State<UserSettings> {
               ],
             ),
             Divider(),
-            FlatButton(
+            ElevatedButton(
               onPressed: onGeneratePressed,
-              child: Text('Generate'),
+              child: Text(
+                'Generate',
+                style: TextStyle(fontSize: 24),
+              ),
             ),
           ],
         ),
