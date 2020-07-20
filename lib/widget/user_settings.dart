@@ -47,14 +47,37 @@ class _UserSettingsState extends State<UserSettings> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('User settings'),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Clockwise?'),
-                Checkbox(
+                Text(
+                  'Rotation direction',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.rotate_left,
+                  color: clockwise
+                      ? Theme.of(context).disabledColor
+                      : Colors.orange,
+                ),
+                Switch(
                   value: clockwise,
                   onChanged: onClockwiseChanged,
+                  activeColor: Colors.green,
+                  activeTrackColor: Colors.lightGreen,
+                  inactiveThumbColor: Colors.orange,
+                  inactiveTrackColor: Colors.orangeAccent,
+                ),
+                Icon(
+                  Icons.rotate_right,
+                  color: clockwise
+                      ? Colors.green
+                      : Theme.of(context).disabledColor,
                 ),
               ],
             ),
