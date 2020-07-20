@@ -19,7 +19,7 @@ class VisualDisplay extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(saved ? 'Saved!' : ''),
+            Text(saved ? '' : ''),
           ],
         ),
       ),
@@ -97,27 +97,38 @@ class SequencePainter extends CustomPainter {
       }
     }
 
-    double padding = 20;
+    double padding = 40;
     double screenWidth = size.width - 2 * padding;
     double screenHeight = size.height - 2 * padding;
+    double contentWidth = maxDx - minDx;
+    double contentHeight = maxDy - minDy;
 
-    // Resize factor for the smaller ratio
-    double ratioX = screenWidth / (maxDx - minDx);
-    double ratioY = screenHeight / (maxDy - minDy);
+    // Flip 90 degrees if width and height could be fit better
+    bool flip = screenHeight > screenWidth != contentHeight > contentWidth;
+    if (flip) {
+      direction = pi / 2;
+      contentWidth = maxDy - minDy;
+      contentHeight = maxDx - minDx;
+      double temp = minDx;
+      minDx = minDy;
+      minDy = temp;
+      temp = maxDx;
+      maxDx = maxDy;
+      maxDy = temp;
+    } else {
+      direction = 0;
+    }
+
+      // Resize factor for the smaller ratio
+    double ratioX = screenWidth / contentWidth;
+    double ratioY = screenHeight / contentHeight;
     double minRatio = min(ratioX, ratioY);
 
     // Shift starting point
-    double offsetX = -minDx * minRatio +
-        padding +
-        (screenWidth - (maxDx - minDx) * minRatio) / 2;
-    double offsetY = -minDy * minRatio +
-        padding +
-        (screenHeight - (maxDy - minDy) * minRatio) / 2;
-
-    // TODO: Handle if width > height
+    double offsetX = padding + (flip ? maxDx : - minDx) * minRatio + (screenWidth - contentWidth * minRatio) / 2;
+    double offsetY = padding - minDy * minRatio + (screenHeight - contentHeight * minRatio) / 2;
 
     offset = Offset(offsetX, offsetY);
-    direction = 0;
 
     // Draw starting position
     final firstTransition = sequence.transitions.first;
@@ -251,6 +262,15 @@ class SequencePainter extends CustomPainter {
         );
       case 'Xstep':
         return VisualCrossStep(
+          canvas: canvas,
+          transition: transition,
+          start: start,
+          travelDirection: travelDirection,
+          getPaint: _getPaint,
+          ratio: 1.0,
+        );
+      case 'SprEagle':
+        return VisualSpreadEagle(
           canvas: canvas,
           transition: transition,
           start: start,
