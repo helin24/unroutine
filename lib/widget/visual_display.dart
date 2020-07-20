@@ -97,7 +97,7 @@ class SequencePainter extends CustomPainter {
       }
     }
 
-    double padding = 20;
+    double padding = 40;
     double screenWidth = size.width - 2 * padding;
     double screenHeight = size.height - 2 * padding;
     double contentWidth = maxDx - minDx;
@@ -115,6 +115,8 @@ class SequencePainter extends CustomPainter {
       temp = maxDx;
       maxDx = maxDy;
       maxDy = temp;
+    } else {
+      direction = 0;
     }
 
       // Resize factor for the smaller ratio

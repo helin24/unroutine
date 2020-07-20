@@ -346,7 +346,7 @@ class VisualPowerPull extends VisualTransition {
             changeY * cos(travelDirection) -
             changeX * sin(travelDirection),
       ),
-      direction: travelDirection,
+      direction: travelDirection + pi / 2,
     );
   }
 }
