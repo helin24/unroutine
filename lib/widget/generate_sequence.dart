@@ -52,6 +52,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
   int count = 6;
   bool pressed = false;
   SequenceModel sequence;
+
 //  TextEditingController _countController;
 
   @override
@@ -114,13 +115,16 @@ class _GenerateSequenceState extends State<GenerateSequence> {
       ]),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Spacer(flex: 2),
-                Text('Number of steps'),
+                Text(
+                  'Number of steps',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
                 Spacer(flex: 1),
                 IconButton(
                   icon: Icon(Icons.arrow_left),
@@ -130,7 +134,10 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                           })
                       : null,
                 ),
-                Text(count.toString()),
+                Text(
+                  count.toString(),
+                  style: Theme.of(context).textTheme.headline5,
+                ),
 //                Expanded(
 //                  child: TextField(
 //                    keyboardType: TextInputType.number,
@@ -156,21 +163,29 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                 Spacer(flex: 2),
               ],
             ),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Step sequence?'),
+                Text(
+                  'Step sequence?',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
                 Checkbox(
                   value: stepSequence,
                   onChanged: onStepSequenceChanged,
                 ),
               ],
             ),
+            Divider(),
             pressed
                 ? CircularProgressIndicator()
-                : FlatButton(
+                : ElevatedButton(
                     onPressed: _onGeneratePressed,
-                    child: Text('Generate new'),
+                    child: Text(
+                      'Generate new',
+                      style: TextStyle(fontSize: 24),
+                    ),
                   ),
           ],
         ),

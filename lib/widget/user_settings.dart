@@ -45,7 +45,6 @@ class _UserSettingsState extends State<UserSettings> {
       ),
       body: Center(
         child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Divider(),
             Row(
