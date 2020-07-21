@@ -52,10 +52,14 @@ class _GenerateSequenceState extends State<GenerateSequence> {
   int count = 6;
   bool pressed = false;
   SequenceModel sequence;
+//  TextEditingController _countController;
 
   @override
   void initState() {
     super.initState();
+//    _countController = new TextEditingController(
+//      text: count.toString(),
+//    );
     SharedPreferences.getInstance().then((preferences) {
       if (preferences.containsKey(CLOCKWISE_PREFERENCE)) {
         final clockwiseValue = preferences.getBool(CLOCKWISE_PREFERENCE);
@@ -115,17 +119,41 @@ class _GenerateSequenceState extends State<GenerateSequence> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Spacer(flex: 2),
                 Text('Number of steps'),
-                DropdownButton<int>(
-                  value: count,
-                  onChanged: (int newValue) => setState(() {
-                    count = newValue;
-                  }),
-                  items: Iterable<int>.generate(20).map((int num) {
-                    return DropdownMenuItem<int>(
-                        value: num + 1, child: Text((num + 1).toString()));
-                  }).toList(),
+                Spacer(flex: 1),
+                IconButton(
+                  icon: Icon(Icons.arrow_left),
+                  onPressed: count > 4
+                      ? () => setState(() {
+                            count -= 1;
+                          })
+                      : null,
                 ),
+                Text(count.toString()),
+//                Expanded(
+//                  child: TextField(
+//                    keyboardType: TextInputType.number,
+//                    controller: _countController,
+//                    onChanged: (value) {
+//                      int intValue = int.parse(value);
+//                      if (intValue == null || intValue < 4 || intValue > 18) {
+//                        return;
+//                      }
+//                      setState(() {
+//                        count = intValue;
+//                      });
+//                    },
+//                  ),
+//                ),
+                IconButton(
+                    icon: Icon(Icons.arrow_right),
+                    onPressed: count < 18
+                        ? () => setState(() {
+                              count += 1;
+                            })
+                        : null),
+                Spacer(flex: 2),
               ],
             ),
             Row(
