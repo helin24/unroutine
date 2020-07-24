@@ -53,14 +53,9 @@ class _GenerateSequenceState extends State<GenerateSequence> {
   bool pressed = false;
   SequenceModel sequence;
 
-//  TextEditingController _countController;
-
   @override
   void initState() {
     super.initState();
-//    _countController = new TextEditingController(
-//      text: count.toString(),
-//    );
     SharedPreferences.getInstance().then((preferences) {
       if (preferences.containsKey(CLOCKWISE_PREFERENCE)) {
         final clockwiseValue = preferences.getBool(CLOCKWISE_PREFERENCE);
@@ -138,21 +133,6 @@ class _GenerateSequenceState extends State<GenerateSequence> {
                   count.toString(),
                   style: Theme.of(context).textTheme.headline5,
                 ),
-//                Expanded(
-//                  child: TextField(
-//                    keyboardType: TextInputType.number,
-//                    controller: _countController,
-//                    onChanged: (value) {
-//                      int intValue = int.parse(value);
-//                      if (intValue == null || intValue < 4 || intValue > 18) {
-//                        return;
-//                      }
-//                      setState(() {
-//                        count = intValue;
-//                      });
-//                    },
-//                  ),
-//                ),
                 IconButton(
                     icon: Icon(Icons.arrow_right),
                     onPressed: count < 18
