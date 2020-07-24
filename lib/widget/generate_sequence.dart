@@ -180,7 +180,7 @@ class _GenerateSequenceState extends State<GenerateSequence> {
             Divider(),
             pressed
                 ? CircularProgressIndicator()
-                : ElevatedButton(
+                : RaisedButton(
                     onPressed: _onGeneratePressed,
                     child: Text(
                       'Generate new',
