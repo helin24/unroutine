@@ -45,7 +45,6 @@ class _UserSettingsState extends State<UserSettings> {
       ),
       body: Center(
         child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Divider(),
             Row(
@@ -60,6 +59,14 @@ class _UserSettingsState extends State<UserSettings> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  'Counterclockwise',
+                  style: TextStyle(
+                    color: clockwise
+                        ? Theme.of(context).disabledColor
+                        : Colors.orange,
+                  ),
+                ),
                 Icon(
                   Icons.rotate_left,
                   color: clockwise
@@ -79,6 +86,14 @@ class _UserSettingsState extends State<UserSettings> {
                   color: clockwise
                       ? Colors.green
                       : Theme.of(context).disabledColor,
+                ),
+                Text(
+                  'Clockwise',
+                  style: TextStyle(
+                    color: clockwise
+                        ? Colors.green
+                        : Theme.of(context).disabledColor,
+                  ),
                 ),
               ],
             ),
@@ -115,7 +130,7 @@ class _UserSettingsState extends State<UserSettings> {
               ],
             ),
             Divider(),
-            ElevatedButton(
+            RaisedButton(
               onPressed: onGeneratePressed,
               child: Text(
                 'Generate',

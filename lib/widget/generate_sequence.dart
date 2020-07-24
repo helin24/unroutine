@@ -110,39 +110,62 @@ class _GenerateSequenceState extends State<GenerateSequence> {
       ]),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Number of steps'),
-                DropdownButton<int>(
-                  value: count,
-                  onChanged: (int newValue) => setState(() {
-                    count = newValue;
-                  }),
-                  items: Iterable<int>.generate(20).map((int num) {
-                    return DropdownMenuItem<int>(
-                        value: num + 1, child: Text((num + 1).toString()));
-                  }).toList(),
+                Spacer(flex: 2),
+                Text(
+                  'Number of steps',
+                  style: Theme.of(context).textTheme.headline5,
                 ),
+                Spacer(flex: 1),
+                IconButton(
+                  icon: Icon(Icons.arrow_left),
+                  onPressed: count > 4
+                      ? () => setState(() {
+                            count -= 1;
+                          })
+                      : null,
+                ),
+                Text(
+                  count.toString(),
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                IconButton(
+                    icon: Icon(Icons.arrow_right),
+                    onPressed: count < 18
+                        ? () => setState(() {
+                              count += 1;
+                            })
+                        : null),
+                Spacer(flex: 2),
               ],
             ),
+            Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('Step sequence?'),
+                Text(
+                  'Step sequence?',
+                  style: Theme.of(context).textTheme.headline5,
+                ),
                 Checkbox(
                   value: stepSequence,
                   onChanged: onStepSequenceChanged,
                 ),
               ],
             ),
+            Divider(),
             pressed
                 ? CircularProgressIndicator()
-                : FlatButton(
+                : RaisedButton(
                     onPressed: _onGeneratePressed,
-                    child: Text('Generate new'),
+                    child: Text(
+                      'Generate new',
+                      style: TextStyle(fontSize: 24),
+                    ),
                   ),
           ],
         ),
