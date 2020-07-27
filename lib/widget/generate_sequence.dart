@@ -26,6 +26,7 @@ Future<SequenceModel> fetchSequence(
   bool clockwise,
   bool stepSequence,
   String level,
+  int minId,
 ) async {
   final url = apiUrl +
       '?steps=' +
@@ -35,7 +36,9 @@ Future<SequenceModel> fetchSequence(
       '&stepSequence=' +
       (stepSequence ? 'on' : 'off') +
       '&level=' +
-      level;
+      level +
+      '&minId=' +
+      minId.toString();
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
@@ -45,10 +48,16 @@ Future<SequenceModel> fetchSequence(
   }
 }
 
+String minIdKey(String level, bool stepSequence) {
+  final String stepSeqStr = stepSequence ? 'STEP' : 'NONSTEP';
+  return '${level}_${stepSeqStr}_minId';
+}
+
 class _GenerateSequenceState extends State<GenerateSequence> {
   bool clockwise = false;
   bool stepSequence = true;
   String level = levels[0].abbreviation;
+  int minId = 0;
   int count = 6;
   bool pressed = false;
   SequenceModel sequence;
@@ -75,10 +84,22 @@ class _GenerateSequenceState extends State<GenerateSequence> {
     setState(() {
       pressed = true;
     });
-    fetchSequence(count, clockwise, stepSequence, level).then((result) {
+    final String key = minIdKey(level, stepSequence);
+    SharedPreferences.getInstance().then((preferences) {
+      if (preferences.containsKey(key)) {
+        return preferences.getInt(key);
+      } else {
+        return minId;
+      }
+    }).then((minId) {
+      return fetchSequence(count, clockwise, stepSequence, level, minId);
+    }).then((result) {
       setState(() {
         pressed = false;
         sequence = result;
+      });
+      SharedPreferences.getInstance().then((preferences) {
+        preferences.setInt(key, result.id + 1);
       });
       Navigator.push(
         context,
