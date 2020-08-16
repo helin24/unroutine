@@ -41,17 +41,25 @@ class _DisplaySequenceState extends State<DisplaySequence> {
   }
 
   void _onSave() {
+    sequence.savedOn = saveTime;
+    sequence.name = customName;
     DatabaseProvider.db.insertSequence(sequence);
     setState(() {
       saved = true;
     });
+    Navigator.pop(context, true);
+  }
+
+  void _onCancel() {
+    saveTime = null;
+    customName = null;
+    Navigator.pop(context, true);
   }
 
   void _showDialog() {
     saveTime = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm');
     customName = customName ?? 'Saved ' + formatter.format(saveTime);
-    print(customName);
     showDialog(context: context, builder: (_) =>
         AlertDialog(
             title: Text('Hello in dialog'),
@@ -64,11 +72,11 @@ class _DisplaySequenceState extends State<DisplaySequence> {
             actions: <Widget>[
               FlatButton(
                 child: Text('Save'),
-                onPressed: () => print('saved'),
+                onPressed: _onSave,
               ),
               FlatButton(
                 child: Text('Cancel'),
-                onPressed: () => print('canceled'),
+                onPressed: _onCancel,
               ),
             ]
         ));

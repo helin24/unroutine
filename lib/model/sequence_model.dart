@@ -3,8 +3,8 @@ import 'dart:convert';
 class SequenceModel {
   final Edge startEdge;
   final List<Transition> transitions;
-  final String name;
-  final DateTime savedOn;
+  String name;
+  DateTime savedOn;
   final String audioUrl;
   final int id;
 
@@ -36,10 +36,10 @@ class SequenceModel {
   Map<String, dynamic> toDatabaseMap() {
     DateTime now = DateTime.now();
     return {
-      'name': 'Saved ' + now.toIso8601String(),
+      'name': name,
       'startEdge': jsonEncode(startEdge),
       'transitions': jsonEncode(transitions),
-      'savedOn': now.millisecondsSinceEpoch / 1000,
+      'savedOn': savedOn.millisecondsSinceEpoch / 1000,
       'audioUrl': audioUrl,
       'apiId': id,
     };
