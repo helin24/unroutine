@@ -24,7 +24,8 @@ dependencies:
   shared_preferences:
   audioplayers: ^0.15.1
   flutter_rating_bar: ^3.0.1+1
-  camera:
+  # TODO: Update to latest version after fixing startVideoRecording (https://pub.dev/packages/camera/example)
+  camera: <0.6.0
   path_provider:
   open_file:
   speech_to_text: ^2.2.0
